@@ -1,1 +1,439 @@
 
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Wild Era Wiki - Value List</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --orange: #ff7f00;
+            --purple: #8A2BE2;
+            --black: #000000;
+            --white: #FFFFFF;
+            --glow: 0 0 5px var(--orange), 0 0 10px var(--orange), 0 0 20px var(--orange);
+            --win-green: #00ff00;
+            --lose-red: #ff0000;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Press Start 2P', cursive;
+            background-color: var(--black);
+            color: var(--orange);
+            text-shadow: 2px 2px var(--black);
+            overflow-x: hidden;
+        }
+
+        body::after {
+            content: "";
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: repeating-linear-gradient(0deg, rgba(0, 0, 0, 0.3) 0px, rgba(0, 0, 0, 0.3) 1px, transparent 1px, transparent 2px);
+            pointer-events: none;
+            z-index: 1000;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: auto;
+            padding: 20px;
+        }
+
+        h1, h2 {
+            text-align: center;
+            margin-bottom: 25px;
+            color: var(--orange);
+            text-shadow: var(--glow);
+            animation: text-flicker 3s linear infinite;
+            font-size: 2.5rem;
+        }
+        
+        h2 {
+           font-size: 1.8rem;
+           margin-top: 40px;
+           margin-bottom: 20px;
+        }
+
+        .tabs {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 15px;
+            margin-bottom: 30px;
+        }
+
+        .tab {
+            padding: 12px 24px;
+            text-decoration: none;
+            color: var(--orange);
+            background: var(--black);
+            border: 3px solid var(--orange);
+        }
+
+        .tab:hover {
+            color: var(--black);
+            background: var(--orange);
+            box-shadow: var(--glow);
+        }
+
+        .value-tier {
+            margin-bottom: 40px;
+        }
+
+        .item-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+        }
+
+        .item-card {
+            background: #111;
+            border: 3px solid #333;
+            padding: 15px;
+            text-align: center;
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+        
+        .item-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.5);
+            border-color: var(--orange);
+        }
+
+        .item-card img {
+            max-width: 100px;
+            height: auto;
+            margin-bottom: 10px;
+            border: 2px solid var(--purple);
+        }
+
+        .item-card .name {
+            font-size: 0.9rem;
+            margin-bottom: 5px;
+        }
+
+        .item-card .value {
+            font-size: 0.8rem;
+            color: var(--white);
+        }
+
+        /* Trading Comparator */
+        .trade-comparator {
+            background: #111;
+            padding: 20px;
+            border: 4px solid var(--purple);
+            box-shadow: 0 0 15px rgba(0,0,0,0.7);
+        }
+
+        .trade-interface {
+            display: flex;
+            justify-content: space-around;
+            flex-wrap: wrap;
+            gap: 20px;
+        }
+
+        .trade-side {
+            width: 45%;
+            min-width: 300px;
+        }
+
+        .trade-side h3 {
+            text-align: center;
+            margin-bottom: 15px;
+            color: var(--purple);
+        }
+
+        .trade-controls select, .trade-controls input {
+            width: 100%;
+            padding: 10px;
+            margin-bottom: 10px;
+            background: var(--black);
+            color: var(--orange);
+            border: 2px solid var(--orange);
+            font-family: 'Press Start 2P', cursive;
+        }
+
+        .trade-controls button {
+            width: 100%;
+            padding: 10px;
+            background: var(--orange);
+            color: var(--black);
+            border: none;
+            cursor: pointer;
+            font-family: 'Press Start 2P', cursive;
+            transition: all 0.2s;
+        }
+        
+        .trade-controls button:hover {
+            box-shadow: var(--glow);
+        }
+        
+        .offer-box {
+            background: #222;
+            padding: 10px;
+            margin-top: 10px;
+            min-height: 150px;
+            border: 2px dashed var(--orange);
+        }
+
+        .offer-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 5px;
+            background: #333;
+            margin-bottom: 5px;
+        }
+
+        .offer-item button {
+            background: var(--lose-red);
+            color: var(--white);
+            border: none;
+            padding: 3px 6px;
+            cursor: pointer;
+        }
+
+        .comparator-actions {
+            text-align: center;
+            margin: 20px 0;
+        }
+
+        #result-display {
+            padding: 15px;
+            margin-top: 15px;
+            text-align: center;
+            font-size: 1.2rem;
+            display: none; /* Hidden by default */
+        }
+        
+        .fair-trade { color: var(--white); background: #555; }
+        .win { color: var(--black); background: var(--win-green); }
+        .big-win { color: var(--black); background: var(--win-green); animation: text-flicker 1s infinite; }
+        .lose { color: var(--white); background: var(--lose-red); }
+        .big-lose { color: var(--white); background: var(--lose-red); animation: text-flicker 1s infinite; }
+
+
+        @keyframes text-flicker {
+            0% { text-shadow: 0 0 5px var(--orange); }
+            50% { text-shadow: 0 0 20px var(--orange); }
+            100% { text-shadow: 0 0 5px var(--orange); }
+        }
+
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <nav class="tabs">
+        <a href="index.html" class="tab">Home</a>
+        <a href="value-list.html" class="tab">Value List</a>
+        <a href="mechanics.html" class="tab">Game Mechanics</a>
+    </nav>
+
+    <h1>Official Value List</h1>
+    
+    <!-- High Tier -->
+    <div class="value-tier">
+        <h2>90k - 100k+ (High Tier)</h2>
+        <div class="item-grid">
+            <div class="item-card"><img src="images/PBC.png" alt="PBC"><div class="name">PBC</div><div class="value">170,000 DNA</div></div>
+            <div class="item-card"><img src="images/Movie_Brachio.png" alt="Movie Brachio"><div class="name">Movie Brachio</div><div class="value">111,000 DNA</div></div>
+            <div class="item-card"><img src="images/Movie_Mosa.png" alt="Movie Mosa"><div class="name">Movie Mosa</div><div class="value">90,000 DNA</div></div>
+            <div class="item-card"><img src="images/Suited_Capy.png" alt="Suited Capy"><div class="name">Suited Capy</div><div class="value">90,000 DNA</div></div>
+        </div>
+    </div>
+
+    <!-- Mid-High Tier -->
+    <div class="value-tier">
+        <h2>60k - 80k (Mid-High Tier)</h2>
+        <div class="item-grid">
+             <div class="item-card"><img src="images/Movie_Spino.png" alt="Movie Spino"><div class="name">Movie Spino</div><div class="value">80,000 DNA</div></div>
+             <div class="item-card"><img src="images/Indor_Bone.png" alt="Indor Bone"><div class="name">Indor Bone</div><div class="value">76,000 DNA</div></div>
+             <div class="item-card"><img src="images/Movie_Rex.png" alt="Movie Rex"><div class="name">Movie Rex</div><div class="value">73,000 DNA</div></div>
+             <div class="item-card"><img src="images/Carnage_Cerato.png" alt="Carnage Cerato"><div class="name">Carnage Cerato</div><div class="value">70,000 DNA</div></div>
+             <div class="item-card"><img src="images/Movie_Trike.png" alt="Movie Trike"><div class="name">Movie Trike</div><div class="value">69,000 DNA</div></div>
+             <div class="item-card"><img src="images/Indom_Bone.png" alt="Indom Bone"><div class="name">Indom Bone</div><div class="value">67,000 DNA</div></div>
+        </div>
+    </div>
+    
+    <!-- Other tiers follow a similar structure... -->
+
+    <h2>Trade Comparator</h2>
+    <div class="trade-comparator">
+        <div class="trade-interface">
+            <!-- Your Offer Side -->
+            <div class="trade-side">
+                <h3>Your Offer</h3>
+                <div class="trade-controls">
+                    <select id="your-item-select"></select>
+                    <button id="add-your-item">Add Item</button>
+                    <input type="number" id="your-dna-input" placeholder="Enter DNA amount">
+                    <button id="add-your-dna">Add DNA</button>
+                </div>
+                <div class="offer-box" id="your-offer-box"></div>
+            </div>
+
+            <!-- Their Offer Side -->
+            <div class="trade-side">
+                <h3>Their Offer</h3>
+                 <div class="trade-controls">
+                    <select id="their-item-select"></select>
+                    <button id="add-their-item">Add Item</button>
+                    <input type="number" id="their-dna-input" placeholder="Enter DNA amount">
+                    <button id="add-their-dna">Add DNA</button>
+                </div>
+                <div class="offer-box" id="their-offer-box"></div>
+            </div>
+        </div>
+        <div class="comparator-actions">
+             <button id="compare-button">Compare Trades</button>
+        </div>
+        <div id="result-display"></div>
+    </div>
+
+</div>
+
+<script>
+    const tradeValues = {
+        "PBC": 170000, "Movie Brachio": 111000, "Movie Mosa": 90000, "Suited Capy": 90000,
+        "Movie Spino": 80000, "Indor Bone": 76000, "Movie Rex": 73000, "Carnage Cerato": 70000,
+        "Movie Trike": 69000, "Indom Bone": 67000, "Carnage Rex": 53000, "Carnage Pachy": 50000,
+        "Carnage Spino": 45000, "Alpha Indom": 33000, "Albino Indor": 33000, "CowBoy Dilo": 26000,
+        "Jurassic Utah": 20000, "Salmononto": 17000
+    };
+
+    // Populate dropdowns
+    const yourItemSelect = document.getElementById('your-item-select');
+    const theirItemSelect = document.getElementById('their-item-select');
+    for (const item in tradeValues) {
+        const option1 = new Option(item, item);
+        const option2 = new Option(item, item);
+        yourItemSelect.add(option1);
+        theirItemSelect.add(option2);
+    }
+    
+    let yourOffer = {};
+    let theirOffer = {};
+
+    function setupSide(sidePrefix) {
+        const itemSelect = document.getElementById(`${sidePrefix}-item-select`);
+        const addItemButton = document.getElementById(`add-${sidePrefix}-item`);
+        const dnaInput = document.getElementById(`${sidePrefix}-dna-input`);
+        const addDnaButton = document.getElementById(`add-${sidePrefix}-dna`);
+        const offerBox = document.getElementById(`${sidePrefix}-offer-box`);
+        const offerObj = sidePrefix === 'your' ? yourOffer : theirOffer;
+        
+        addItemButton.addEventListener('click', () => {
+            const selectedItem = itemSelect.value;
+            if (selectedItem) {
+                offerObj[selectedItem] = (offerObj[selectedItem] || 0) + 1;
+                updateOfferBox(offerBox, offerObj, sidePrefix);
+            }
+        });
+
+        addDnaButton.addEventListener('click', () => {
+            const dnaAmount = parseInt(dnaInput.value, 10);
+            if (!isNaN(dnaAmount) && dnaAmount > 0) {
+                offerObj['DNA'] = (offerObj['DNA'] || 0) + dnaAmount;
+                dnaInput.value = '';
+                updateOfferBox(offerBox, offerObj, sidePrefix);
+            }
+        });
+    }
+
+    function updateOfferBox(box, offer, sidePrefix) {
+        box.innerHTML = '';
+        for (const item in offer) {
+            const value = item === 'DNA' ? offer[item] : tradeValues[item] * offer[item];
+            const div = document.createElement('div');
+            div.className = 'offer-item';
+            div.innerHTML = `<span>${offer[item]}x ${item} (${value.toLocaleString()} DNA)</span><button data-item="${item}" data-side="${sidePrefix}">X</button>`;
+            box.appendChild(div);
+        }
+        
+        // Add remove functionality
+        box.querySelectorAll('.offer-item button').forEach(button => {
+            button.addEventListener('click', (e) => {
+                const itemToRemove = e.target.dataset.item;
+                const side = e.target.dataset.side;
+                const offerToUpdate = side === 'your' ? yourOffer : theirOffer;
+                const boxToUpdate = side === 'your' ? document.getElementById('your-offer-box') : document.getElementById('their-offer-box');
+
+                if (itemToRemove === 'DNA') {
+                    delete offerToUpdate['DNA'];
+                } else {
+                    offerToUpdate[itemToRemove]--;
+                    if (offerToUpdate[itemToRemove] === 0) {
+                        delete offerToUpdate[itemToRemove];
+                    }
+                }
+                updateOfferBox(boxToUpdate, offerToUpdate, side);
+            });
+        });
+    }
+
+    function calculateTotal(offer) {
+        let total = 0;
+        for(const item in offer) {
+            if (item === 'DNA') {
+                total += offer[item];
+            } else {
+                total += tradeValues[item] * offer[item];
+            }
+        }
+        return total;
+    }
+
+    document.getElementById('compare-button').addEventListener('click', () => {
+        const yourTotal = calculateTotal(yourOffer);
+        const theirTotal = calculateTotal(theirOffer);
+        const difference = theirTotal - yourTotal;
+        const resultDisplay = document.getElementById('result-display');
+
+        let resultText = '';
+        let resultClass = '';
+        
+        if (Math.abs(difference) / yourTotal < 0.05) {
+            resultText = "Fair Trade!";
+            resultClass = 'fair-trade';
+        } else if (difference > 0) {
+            if (difference / yourTotal > 0.25) {
+                resultText = `Big Win! (+${difference.toLocaleString()} DNA)`;
+                resultClass = 'big-win';
+            } else {
+                resultText = `Win! (+${difference.toLocaleString()} DNA)`;
+                resultClass = 'win';
+            }
+        } else {
+             if (Math.abs(difference) / yourTotal > 0.25) {
+                resultText = `Big Lose! (${difference.toLocaleString()} DNA)`;
+                resultClass = 'big-lose';
+            } else {
+                resultText = `Lose! (${difference.toLocaleString()} DNA)`;
+                resultClass = 'lose';
+            }
+        }
+        
+        resultDisplay.textContent = resultText;
+        resultDisplay.className = resultClass;
+        resultDisplay.style.display = 'block';
+    });
+
+    setupSide('your');
+    setupSide('their');
+</script>
+
+</body>
+  </html>
