@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Wild Era Wiki - Value List</title>
+    <title>Wild Era Wiki - Advanced Trading</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
@@ -17,42 +17,24 @@
             --win-green: #00ff00;
             --lose-red: #ff0000;
 
-            --glow-orange: 0 0 5px var(--orange), 0 0 10px var(--orange), 0 0 20px var(--orange);
-            --glow-purple: 0 0 5px var(--purple), 0 0 10px var(--purple), 0 0 20px var(--purple);
+            --glow-orange: 0 0 5px var(--orange), 0 0 10px var(--orange);
+            --glow-purple: 0 0 8px var(--purple), 0 0 15px var(--purple);
             --glow-green: 0 0 8px var(--win-green), 0 0 15px var(--win-green);
             --glow-red: 0 0 8px var(--lose-red), 0 0 15px var(--lose-red);
         }
 
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
 
         body {
             font-family: 'Press Start 2P', cursive;
             background-color: var(--black);
             color: var(--orange);
-            text-shadow: 2px 2px var(--black);
+            text-shadow: 1px 1px 2px var(--black);
             overflow-x: hidden;
             background-image: radial-gradient(circle, #222 0%, var(--black) 80%);
         }
         
-        /* CRT Screen Effect */
-        body::before {
-            content: " ";
-            display: block;
-            position: fixed;
-            top: 0;
-            left: 0;
-            bottom: 0;
-            right: 0;
-            background: linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.25) 50%), linear-gradient(90deg, rgba(255, 0, 0, 0.06), rgba(0, 255, 0, 0.02), rgba(0, 0, 255, 0.06));
-            z-index: 2;
-            background-size: 100% 2px, 3px 100%;
-            pointer-events: none;
-        }
-        
+        /* Scanlines Overlay */
         body::after {
             content: "";
             position: fixed;
@@ -60,87 +42,81 @@
             left: 0;
             width: 100vw;
             height: 100vh;
-            background: rgba(0,0,0,0.2);
-            box-shadow: inset 0 0 100px 50px rgba(0,0,0,0.8);
+            background: repeating-linear-gradient(0deg, rgba(0,0,0,0.3) 0, rgba(0,0,0,0.3) 1px, transparent 1px, transparent 2px);
             pointer-events: none;
-            z-index: 3;
+            z-index: 1000;
         }
 
-
-        .container {
-            max-width: 1400px;
-            margin: auto;
-            padding: 20px;
-            position: relative;
-            z-index: 1;
-        }
-
+        .container { max-width: 1400px; margin: auto; padding: 20px; }
+        
         h1, h2 {
             text-align: center;
             margin-bottom: 25px;
             color: var(--orange);
             text-shadow: var(--glow-orange);
             animation: text-flicker 4s linear infinite;
-            font-size: 2.5rem;
+            font-size: 2rem;
             letter-spacing: 2px;
         }
-        
-        h2 {
-           font-size: 2rem;
-           margin-top: 50px;
-           margin-bottom: 30px;
-           color: var(--white);
-        }
-        
-        h2::before, h2::after {
-            content: " -= ";
-            color: var(--purple);
-        }
+        h2 { font-size: 1.8rem; margin-top: 50px; color: var(--white); }
+        h2::before, h2::after { content: " -= "; color: var(--purple); }
 
-
-        .value-tier { margin-bottom: 40px; }
-        .item-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-            gap: 25px;
+        /* --- Custom Select Dropdown --- */
+        .custom-select-wrapper { position: relative; width: 100%; margin-bottom: 10px; font-size: 0.8rem; }
+        .custom-select-trigger {
+            width: 100%;
+            padding: 12px;
+            background: #111;
+            color: var(--orange);
+            border: 2px solid var(--orange);
+            cursor: pointer;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            transition: box-shadow 0.2s;
         }
-        .item-card {
-            background: var(--dark-grey);
-            border: 4px solid #333;
-            padding: 20px;
-            text-align: center;
-            transition: transform 0.2s, box-shadow 0.2s, border-color 0.2s;
-            position: relative;
-            overflow: hidden;
-        }
-        .item-card::before {
+        .custom-select-trigger:hover, .custom-select-wrapper.active .custom-select-trigger { box-shadow: var(--glow-orange); }
+        .custom-select-trigger::after {
             content: '';
+            width: 0;
+            height: 0;
+            border-left: 6px solid transparent;
+            border-right: 6px solid transparent;
+            border-top: 6px solid var(--orange);
+            transition: transform 0.3s ease;
+        }
+        .custom-select-wrapper.active .custom-select-trigger::after { transform: rotate(180deg); }
+        .custom-options {
             position: absolute;
-            top: -50%;
-            left: -50%;
-            width: 200%;
-            height: 200%;
-            background: conic-gradient(transparent, rgba(255, 127, 0, 0.2), transparent 30%);
-            animation: rotate 4s linear infinite;
+            top: 100%;
+            left: 0;
+            right: 0;
+            background: #111;
+            border: 2px solid var(--orange);
+            border-top: none;
+            z-index: 100;
+            max-height: 200px;
+            overflow-y: auto;
+            transform: scaleY(0);
+            transform-origin: top;
+            transition: transform 0.2s ease-out;
+            visibility: hidden;
         }
-        .item-card:hover {
-            transform: scale(1.05);
-            border-color: var(--orange);
-            box-shadow: 0 0 25px rgba(0,0,0,0.8);
+        .custom-select-wrapper.active .custom-options { transform: scaleY(1); visibility: visible; }
+        .custom-option {
+            padding: 12px;
+            cursor: pointer;
+            transition: background 0.2s, color 0.2s;
         }
-        .item-card img {
-            max-width: 120px;
-            height: 120px;
-            object-fit: contain;
-            margin-bottom: 15px;
-            border-radius: 5px;
-            background: rgba(0,0,0,0.4);
-            padding: 5px;
-        }
-        .item-card .name { font-size: 1rem; margin-bottom: 8px; color: var(--white); }
-        .item-card .value { font-size: 0.9rem; color: var(--orange); }
+        .custom-option:hover { background: var(--orange); color: var(--black); text-shadow: none; }
+        .custom-option.selected { background: var(--purple); color: var(--white); }
+        
+        /* Custom Scrollbar */
+        .custom-options::-webkit-scrollbar { width: 8px; }
+        .custom-options::-webkit-scrollbar-track { background: var(--black); }
+        .custom-options::-webkit-scrollbar-thumb { background: var(--orange); }
 
-        /* --- New Trading UI --- */
+        /* --- Enhanced Trading UI --- */
         .trade-container {
             border: 4px solid var(--purple);
             box-shadow: var(--glow-purple);
@@ -150,13 +126,11 @@
 
         .trade-interface {
             display: flex;
-            justify-content: center;
-            align-items: stretch;
-            gap: 10px;
+            flex-direction: column; /* Mobile First */
+            gap: 20px;
         }
         
         .trade-side {
-            width: 45%;
             padding: 15px;
             border: 2px solid #444;
             display: flex;
@@ -164,157 +138,95 @@
         }
         
         .trade-side h3 {
-            text-align: center;
-            margin-bottom: 20px;
-            font-size: 1.5rem;
+            text-align: center; margin-bottom: 15px; font-size: 1.5rem;
+            padding: 5px; border-bottom: 2px solid;
         }
-        #your-side h3 { color: var(--orange); text-shadow: var(--glow-orange); }
-        #their-side h3 { color: var(--win-green); text-shadow: var(--glow-green); }
-
+        #your-side h3 { color: var(--orange); border-color: var(--orange); text-shadow: var(--glow-orange); }
+        #their-side h3 { color: var(--win-green); border-color: var(--win-green); text-shadow: var(--glow-green); }
 
         .total-value-display {
-            text-align: center;
-            font-size: 1.5rem;
-            margin-bottom: 20px;
-            padding: 10px;
-            background: #000;
-            border: 2px solid var(--purple);
+            text-align: center; font-size: 1.5rem; margin-bottom: 20px;
+            padding: 10px; background: #000; border: 2px solid var(--purple);
         }
 
-        .trade-controls { margin-bottom: 15px; }
-
-        .trade-controls select, .trade-controls input, .trade-controls button {
-            width: 100%;
-            padding: 12px;
-            margin-bottom: 10px;
-            background: #111;
-            color: var(--orange);
-            border: 2px solid var(--orange);
-            font-family: 'Press Start 2P', cursive;
-            font-size: 0.8rem;
-            outline: none;
+        .trade-controls input {
+            width: 100%; padding: 12px; margin-bottom: 10px; background: #111;
+            color: var(--orange); border: 2px solid var(--orange);
+            font-family: 'Press Start 2P', cursive; font-size: 0.8rem;
         }
-        
         .trade-controls button {
-            cursor: pointer;
-            transition: background 0.2s, color 0.2s, box-shadow 0.2s;
+            width: 100%; padding: 12px; margin-top: 5px;
+            background: var(--orange); color: var(--black); border: none;
+            cursor: pointer; font-family: 'Press Start 2P', cursive;
+            transition: all 0.2s; text-shadow: none;
         }
-        
-        .trade-controls button:hover {
-            background: var(--orange);
-            color: var(--black);
-            box-shadow: var(--glow-orange);
-        }
+        .trade-controls button:hover { box-shadow: var(--glow-orange); }
         
         .offer-box {
             flex-grow: 1;
-            background-image: linear-gradient(rgba(157, 0, 255, 0.1) 1px, transparent 1px), linear-gradient(90deg, rgba(157, 0, 255, 0.1) 1px, transparent 1px);
-            background-size: 25px 25px;
+            background-color: #080808;
+            background-image: linear-gradient(rgba(157, 0, 255, 0.08) 1px, transparent 1px), linear-gradient(90deg, rgba(157, 0, 255, 0.08) 1px, transparent 1px);
+            background-size: 20px 20px;
             border: 2px dashed var(--purple);
-            padding: 10px;
-            min-height: 200px;
-            overflow-y: auto;
+            padding: 10px; min-height: 250px;
         }
         
         .offer-item {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 8px;
-            background: rgba(0,0,0,0.5);
-            margin-bottom: 8px;
-            font-size: 0.8rem;
-            border-left: 3px solid var(--orange);
+            display: flex; justify-content: space-between; align-items: center;
+            padding: 8px; background: rgba(0,0,0,0.6); margin-bottom: 8px;
+            font-size: 0.8rem; border-left: 3px solid var(--orange);
         }
         .offer-item button {
-            background: var(--lose-red);
-            color: var(--white);
-            border: none;
-            padding: 4px 8px;
-            cursor: pointer;
+            background: var(--lose-red); color: var(--white);
+            border: none; padding: 4px 8px; cursor: pointer;
         }
 
-        .trade-separator {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 3rem;
-            color: var(--purple);
-            text-shadow: var(--glow-purple);
-            padding: 0 20px;
-        }
-        
-        .comparator-actions { text-align: center; margin-top: 30px; }
+        .trade-separator { display: none; } /* Hidden on mobile */
         
         #compare-button {
-            padding: 20px 40px;
-            font-size: 1.5rem;
-            background: var(--purple);
-            color: var(--white);
-            border: 3px solid var(--white);
-            cursor: pointer;
-            transition: all 0.2s;
-            animation: pulse 2s infinite;
+            display: block; width: 100%; padding: 20px; font-size: 1.5rem;
+            background: var(--purple); color: var(--white);
+            border: 3px solid var(--white); cursor: pointer;
+            transition: all 0.2s; animation: pulse 2s infinite;
         }
         #compare-button:hover { box-shadow: var(--glow-purple); }
 
         #result-display {
-            margin-top: 30px;
-            padding: 20px;
-            text-align: center;
-            font-size: 2rem;
-            text-transform: uppercase;
-            display: none;
+            margin-top: 30px; padding: 20px; text-align: center;
+            font-size: 1.5rem; text-transform: uppercase;
+            transform: scale(0); transition: transform 0.3s ease-in-out;
         }
+        #result-display.visible { transform: scale(1); }
 
-        .fair-trade { color: var(--white); background: #555; border: 2px solid var(--white); }
-        .win { color: var(--black); background: var(--win-green); border: 2px solid var(--black); text-shadow: none; }
-        .big-win { color: var(--black); background: var(--win-green); border: 2px solid var(--black); text-shadow: var(--glow-green); animation: text-flicker 1s infinite; }
-        .lose { color: var(--white); background: var(--lose-red); border: 2px solid var(--white); }
-        .big-lose { color: var(--white); background: var(--lose-red); border: 2px solid var(--white); text-shadow: var(--glow-red); animation: text-flicker 1s infinite; }
+        .fair-trade { color: var(--white); background: #555; }
+        .win { color: var(--black); background: var(--win-green); text-shadow: none; }
+        .big-win { color: var(--black); background: var(--win-green); animation: text-flicker 1s infinite; text-shadow: none; }
+        .lose { color: var(--white); background: var(--lose-red); }
+        .big-lose { color: var--white); background: var(--lose-red); animation: text-flicker 1s infinite; }
         
-        footer {
-            text-align: center;
-            padding: 40px 20px;
-            margin-top: 50px;
-            color: var(--white);
-            font-size: 0.8rem;
-            text-shadow: 1px 1px var(--black);
+        /* --- Desktop & Tablet Layout --- */
+        @media (min-width: 900px) {
+            h1 { font-size: 2.5rem; }
+            .trade-interface { flex-direction: row; align-items: stretch; }
+            .trade-side { width: 45%; }
+            .trade-separator {
+                display: flex; align-items: center; justify-content: center;
+                font-size: 3rem; color: var(--purple); text-shadow: var(--glow-purple);
+            }
+            #result-display { font-size: 2rem; }
         }
 
         @keyframes text-flicker { 0%, 100% { opacity: 1; } 50% { opacity: 0.7; } }
         @keyframes pulse { 0%, 100% { transform: scale(1); } 50% { transform: scale(1.05); } }
-        @keyframes rotate { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
 
     </style>
 </head>
 <body>
 
 <div class="container">
-    <h1>Official Value List</h1>
     
-    <div class="value-tier">
-        <h2>High Tier</h2>
-        <div class="item-grid">
-            <div class="item-card"><img src="images/PBC.png" alt="PBC"><div class="name">PBC</div><div class="value">170,000 DNA</div></div>
-            <div class="item-card"><img src="images/Movie_Brachio.png" alt="Movie Brachio"><div class="name">Movie Brachio</div><div class="value">111,000 DNA</div></div>
-            <div class="item-card"><img src="images/Movie_Mosa.png" alt="Movie Mosa"><div class="name">Movie Mosa</div><div class="value">90,000 DNA</div></div>
-            <div class="item-card"><img src="images/Suited_Capy.png" alt="Suited Capy"><div class="name">Suited Capy</div><div class="value">90,000 DNA</div></div>
-        </div>
-    </div>
+    <!-- You can place the value list grids here if desired -->
 
-    <div class="value-tier">
-        <h2>Mid-High Tier</h2>
-        <div class="item-grid">
-             <div class="item-card"><img src="images/Movie_Spino.png" alt="Movie Spino"><div class="name">Movie Spino</div><div class="value">80,000 DNA</div></div>
-             <div class="item-card"><img src="images/Indor_Bone.png" alt="Indor Bone"><div class="name">Indor Bone</div><div class="value">76,000 DNA</div></div>
-             <div class="item-card"><img src="images/Movie_Rex.png" alt="Movie Rex"><div class="name">Movie Rex</div><div class="value">73,000 DNA</div></div>
-             <div class="item-card"><img src="images/Carnage_Cerato.png" alt="Carnage Cerato"><div class="name">Carnage Cerato</div><div class="value">70,000 DNA</div></div>
-             <div class="item-card"><img src="images/Movie_Trike.png" alt="Movie Trike"><div class="name">Movie Trike</div><div class="value">69,000 DNA</div></div>
-             <div class="item-card"><img src="images/Indom_Bone.png" alt="Indom Bone"><div class="name">Indom Bone</div><div class="value">67,000 DNA</div></div>
-        </div>
-    </div>
-    
     <h2>Trade Simulator</h2>
     <div class="trade-container">
         <div class="trade-interface">
@@ -323,9 +235,13 @@
                 <h3>PLAYER 1</h3>
                 <div class="total-value-display" id="your-total-value">0 DNA</div>
                 <div class="trade-controls">
-                    <select id="your-item-select"></select>
+                    <!-- Custom Select for Your Items -->
+                    <div class="custom-select-wrapper" id="your-item-select-wrapper">
+                        <div class="custom-select-trigger"><span>--- Select an Item ---</span></div>
+                        <div class="custom-options"></div>
+                    </div>
                     <button id="add-your-item">Add Item</button>
-                    <input type="number" id="your-dna-input" placeholder="Enter DNA amount">
+                    <input type="number" id="your-dna-input" min="0" placeholder="Enter DNA amount">
                 </div>
                 <div class="offer-box" id="your-offer-box"></div>
             </div>
@@ -337,22 +253,22 @@
                 <h3>PLAYER 2</h3>
                 <div class="total-value-display" id="their-total-value">0 DNA</div>
                  <div class="trade-controls">
-                    <select id="their-item-select"></select>
+                    <!-- Custom Select for Their Items -->
+                    <div class="custom-select-wrapper" id="their-item-select-wrapper">
+                        <div class="custom-select-trigger"><span>--- Select an Item ---</span></div>
+                        <div class="custom-options"></div>
+                    </div>
                     <button id="add-their-item">Add Item</button>
-                    <input type="number" id="their-dna-input" placeholder="Enter DNA amount">
+                    <input type="number" id="their-dna-input" min="0" placeholder="Enter DNA amount">
                 </div>
                 <div class="offer-box" id="their-offer-box"></div>
             </div>
         </div>
-        <div class="comparator-actions">
+        <div class="comparator-actions" style="margin-top: 30px;">
              <button id="compare-button">ANALYZE</button>
         </div>
         <div id="result-display"></div>
     </div>
-
-    <footer>
-        <p>&copy; 2025 Wild Era Wiki. All rights reserved.</p>
-    </footer>
 </div>
 
 <script>
@@ -364,42 +280,52 @@
         "Jurassic Utah": 20000, "Salmononto": 17000
     };
 
-    // --- State for the trades ---
     let yourOffer = {};
     let theirOffer = {};
     
-    function init() {
-        const yourItemSelect = document.getElementById('your-item-select');
-        const theirItemSelect = document.getElementById('their-item-select');
+    function createCustomSelect(wrapperId) {
+        const wrapper = document.getElementById(wrapperId);
+        const trigger = wrapper.querySelector('.custom-select-trigger');
+        const optionsContainer = wrapper.querySelector('.custom-options');
+        let selectedValue = "";
+
+        Object.keys(tradeValues).forEach(item => {
+            const option = document.createElement('div');
+            option.className = 'custom-option';
+            option.dataset.value = item;
+            option.textContent = `${item} (${tradeValues[item].toLocaleString()} DNA)`;
+            option.addEventListener('click', () => {
+                selectedValue = item;
+                trigger.querySelector('span').textContent = item;
+                wrapper.classList.remove('active');
+            });
+            optionsContainer.appendChild(option);
+        });
+
+        trigger.addEventListener('click', () => wrapper.classList.toggle('active'));
         
-        // Add a placeholder option
-        const placeholderOption = new Option("--- Select an Item ---", "");
-        yourItemSelect.add(placeholderOption.cloneNode(true));
-        theirItemSelect.add(placeholderOption.cloneNode(true));
-
-        for (const item in tradeValues) {
-            const option = new Option(`${item} (${tradeValues[item].toLocaleString()} DNA)`, item);
-            yourItemSelect.add(option.cloneNode(true));
-            theirItemSelect.add(option.cloneNode(true));
-        }
-
-        setupSide('your');
-        setupSide('their');
-        document.getElementById('compare-button').addEventListener('click', compareTrades);
+        return {
+            getValue: () => selectedValue,
+            reset: () => {
+                selectedValue = "";
+                trigger.querySelector('span').textContent = "--- Select an Item ---";
+            }
+        };
     }
 
-    function setupSide(side) {
-        document.getElementById(`add-${side}-item`).addEventListener('click', () => addItem(side));
+    const yourSelect = createCustomSelect('your-item-select-wrapper');
+    const theirSelect = createCustomSelect('their-item-select-wrapper');
+
+    function setupSide(side, customSelect) {
+        document.getElementById(`add-${side}-item`).addEventListener('click', () => addItem(side, customSelect));
         document.getElementById(`${side}-dna-input`).addEventListener('keypress', (e) => {
             if (e.key === 'Enter') addDna(side);
         });
     }
 
-    function addItem(side) {
-        const select = document.getElementById(`${side}-item-select`);
-        const selectedItem = select.value;
+    function addItem(side, customSelect) {
+        const selectedItem = customSelect.getValue();
         const offer = side === 'your' ? yourOffer : theirOffer;
-
         if (selectedItem) {
             offer[selectedItem] = (offer[selectedItem] || 0) + 1;
             updateUI();
@@ -410,7 +336,6 @@
         const input = document.getElementById(`${side}-dna-input`);
         const dnaAmount = parseInt(input.value, 10);
         const offer = side === 'your' ? yourOffer : theirOffer;
-
         if (!isNaN(dnaAmount) && dnaAmount > 0) {
             offer['DNA'] = (offer['DNA'] || 0) + dnaAmount;
             input.value = '';
@@ -420,29 +345,23 @@
 
     function removeItem(side, item) {
         const offer = side === 'your' ? yourOffer : theirOffer;
-        if (item === 'DNA') {
-            delete offer['DNA'];
-        } else {
+        if (item === 'DNA') delete offer['DNA'];
+        else {
             offer[item]--;
-            if (offer[item] <= 0) {
-                delete offer[item];
-            }
+            if (offer[item] <= 0) delete offer[item];
         }
         updateUI();
     }
 
     function calculateTotal(offer) {
-        let total = 0;
-        for(const item in offer) {
-            total += (item === 'DNA' ? offer[item] : tradeValues[item] * offer[item]);
-        }
-        return total;
+        return Object.keys(offer).reduce((total, item) => {
+            return total + (item === 'DNA' ? offer[item] : tradeValues[item] * offer[item]);
+        }, 0);
     }
     
     function updateUI() {
         updateOfferBox('your', yourOffer);
         updateOfferBox('their', theirOffer);
-        
         document.getElementById('your-total-value').textContent = `${calculateTotal(yourOffer).toLocaleString()} DNA`;
         document.getElementById('their-total-value').textContent = `${calculateTotal(theirOffer).toLocaleString()} DNA`;
     }
@@ -450,15 +369,13 @@
     function updateOfferBox(side, offer) {
         const box = document.getElementById(`${side}-offer-box`);
         box.innerHTML = '';
-        const sortedItems = Object.keys(offer).sort();
-
-        for (const item of sortedItems) {
+        Object.keys(offer).sort().forEach(item => {
             const div = document.createElement('div');
             div.className = 'offer-item';
-            div.innerHTML = `<span>${offer[item]}x ${item}</span><button>X</button>`;
+            div.innerHTML = `<span>${offer[item].toLocaleString()}x ${item}</span><button>X</button>`;
             div.querySelector('button').addEventListener('click', () => removeItem(side, item));
             box.appendChild(div);
-        }
+        });
     }
 
     function compareTrades() {
@@ -466,16 +383,13 @@
         const theirTotal = calculateTotal(theirOffer);
         const difference = theirTotal - yourTotal;
         const resultDisplay = document.getElementById('result-display');
-
-        let resultText, resultClass;
         const percentageDiff = yourTotal > 0 ? Math.abs(difference) / yourTotal : 1;
 
+        let resultText, resultClass;
         if (yourTotal === 0 || theirTotal === 0) {
-            resultText = "INCOMPLETE TRADE";
-            resultClass = 'lose';
+            resultText = "INCOMPLETE TRADE"; resultClass = 'lose';
         } else if (percentageDiff < 0.05) {
-            resultText = "Fair Trade!";
-            resultClass = 'fair-trade';
+            resultText = "Fair Trade!"; resultClass = 'fair-trade';
         } else if (difference > 0) {
             resultText = `Win! (+${difference.toLocaleString()} DNA)`;
             resultClass = percentageDiff > 0.25 ? 'big-win' : 'win';
@@ -486,11 +400,21 @@
         
         resultDisplay.textContent = resultText;
         resultDisplay.className = resultClass;
-        resultDisplay.style.display = 'block';
+        resultDisplay.classList.add('visible');
     }
+    
+    // Global click listener to close custom selects when clicking outside
+    window.addEventListener('click', (e) => {
+        if (!e.target.closest('.custom-select-wrapper')) {
+            document.querySelectorAll('.custom-select-wrapper').forEach(w => w.classList.remove('active'));
+        }
+    });
 
-    // Initialize the script
-    document.addEventListener('DOMContentLoaded', init);
+    document.addEventListener('DOMContentLoaded', () => {
+        setupSide('your', yourSelect);
+        setupSide('their', theirSelect);
+        document.getElementById('compare-button').addEventListener('click', compareTrades);
+    });
 </script>
 
 </body>
