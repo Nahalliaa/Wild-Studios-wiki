@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Wild Era Wiki</title>
+<style>
+body {
+    background-color: #111;
+    color: #f90;
+    font-family: monospace;
+    margin: 0;
+    padding: 0;
+}
+.container {
+    max-width: 1200px;
+    margin: auto;
+    padding: 20px;
+}
+h1 {
+    color: #ff7f00;
+    text-align: center;
+}
+.section {
+    background-color: #222;
+    border: 1px solid #444;
+    border-radius: 5px;
+    padding: 15px;
+    margin: 15px 0;
+}
+a {
+    color: #f90;
+    text-decoration: none;
+}
+a:hover {
+    text-decoration: underline;
+}
+.gallery {
+    display: flex;
+    overflow-x: auto;
+    gap: 10px;
+    padding: 10px 0;
+}
+.gallery img {
+    max-height: 120px;
+    border: 2px solid #f90;
+    border-radius: 3px;
+}
+.button {
+    display: inline-block;
+    background: #333;
+    color: #f90;
+    border: 2px solid #f90;
+    padding: 8px 15px;
+    margin-top: 10px;
+    cursor: pointer;
+    border-radius: 3px;
+    text-align: center;
+}
+.button:hover {
+    background: #444;
+}
+.key-resources {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+    gap: 15px;
+    text-align: center;
+}
+.key-resources img {
+    max-width: 100px;
+    border: 2px solid #f90;
+    border-radius: 3px;
+}
+</style>
+</head>
+<body>
+
+<div class="container">
+
+    <h1>Wild Era Wiki</h1>
+
+    <div class="section" style="text-align:center;">
+        0 articles | 0 files | 0 active users
+    </div>
+
+    <div class="section">
+        <p>This wiki is a resource for information about the game <em>Wild Era</em>. It covers gameplay mechanics, creatures, biomes, and more. Before contributing, please review the <a href="#">Rules and Policies</a>.</p>
+    </div>
+
+    <h2>Key Resources</h2>
+    <div class="section key-resources">
+        <div>
+            <img src="https://via.placeholder.com/100" alt="Creatures">
+            <p><a href="#">Creatures</a></p>
+        </div>
+        <div>
+            <img src="https://via.placeholder.com/100" alt="Game Mechanics">
+            <p><a href="#">Game Mechanics</a></p>
+        </div>
+        <div>
+            <img src="https://via.placeholder.com/100" alt="Trading">
+            <p><a href="#">Trading</a></p>
+        </div>
+        <div>
+            <img src="https://via.placeholder.com/100" alt="Skins">
+            <p><a href="#">Skins</a></p>
+        </div>
+    </div>
+
+    <h2>Creatures</h2>
+    <div class="section">
+        <p><em>Wild Era</em> includes a variety of creatures, such as dinosaurs, fliers, and semi-aquatics. Most are unlocked using Ambers and Fossils, while Hybrids require crafting with other creatures.</p>
+        <div class="gallery">
+            <img src="https://via.placeholder.com/150" alt="Creature 1">
+            <img src="https://via.placeholder.com/150" alt="Creature 2">
+            <img src="https://via.placeholder.com/150" alt="Creature 3">
+            <img src="https://via.placeholder.com/150" alt="Creature 4">
+        </div>
+    </div>
+
+    <h2>Biomes</h2>
+    <div class="section">
+        <p>The game features multiple biomes, including forests, plains, and other environments. Dynamic weather events, such as floods or droughts, can alter gameplay conditions.</p>
+        <div class="gallery">
+            <img src="https://via.placeholder.com/150" alt="Biome 1">
+            <img src="https://via.placeholder.com/150" alt="Biome 2">
+            <img src="https://via.placeholder.com/150" alt="Biome 3">
+            <img src="https://via.placeholder.com/150" alt="Biome 4">
+        </div>
+    </div>
+
+    <h2>Access the Game</h2>
+    <div class="section" style="text-align:center;">
+        <a href="https://www.roblox.com/games/119283489130383/Wild-Era-Quetz-Deino">
+            <img src="https://via.placeholder.com/200x80" alt="Wild Era Logo">
+        </a>
+    </div>
+
+    <h2>Community</h2>
+    <div class="section">
+        <ul>
+            <li><a href="https://discord.gg/5hKfJRFGf4">Official Discord</a></li>
+            <li><a href="https://www.roblox.com/groups/12020792/Wild-Studios#!/about">Roblox Group</a></li>
+            <li><a href="#">Patch Notes</a></li>
+        </ul>
+    </div>
+
+    <h2>Contribute</h2>
+    <div class="section" style="text-align:center;">
+        Add to the wiki by creating a new article. Verify the page does not already exist.
+        <div class="button">CREATE ARTICLE</div>
+    </div>
+
+</div>
+
+</body>
+</html>
