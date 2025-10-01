@@ -1,274 +1,263 @@
 <!DOCTYPE html>
-
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Wild Era Wiki</title>
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
-<style>
-:root {
---orange: #ff7f00;
---purple: #8A2BE2;
---black: #000000;
---white: #FFFFFF;
---glow: 0 0 5px var(--orange), 0 0 10px var(--orange), 0 0 20px var(--orange);
-}
-
-code
-Code
-download
-content_copy
-expand_less
-* {
-        margin: 0;
-        padding: 0;
-        box-sizing: border-box;
-    }
-
-    body {
-        font-family: 'Press Start 2P', cursive;
-        background-color: var(--black);
-        color: var(--orange);
-        text-shadow: 2px 2px var(--black);
-        overflow-x: hidden;
-        position: relative;
-    }
-
-    body::after {
-        content: "";
-        position: absolute;
-        top: 0;
-        left: 0;
-        width: 100%;
-        height: 100%;
-        background: repeating-linear-gradient(
-            0deg,
-            rgba(0, 0, 0, 0.3) 0px,
-            rgba(0, 0, 0, 0.3) 1px,
-            transparent 1px,
-            transparent 2px
-        );
-        pointer-events: none;
-        z-index: 1000;
-    }
-
-    .container {
-        max-width: 1200px;
-        margin: auto;
-        padding: 20px;
-        position: relative;
-        z-index: 2;
-    }
-
-    header img {
-        max-width: 100%;
-        border: 4px solid var(--orange);
-        box-shadow: var(--glow);
-        border-radius: 8px;
-        animation: flicker 1.5s infinite alternate;
-    }
-
-    h1, h2 {
-        text-align: center;
-        margin-bottom: 25px;
-        color: var(--orange);
-        text-shadow: var(--glow);
-        animation: text-flicker 3s linear infinite;
-        font-size: 2.5rem;
-    }
-    
-    h2 {
-       font-size: 1.8rem;
-       margin-top: 20px;
-    }
-
-    .tabs {
-        display: flex;
-        flex-wrap: wrap;
-        justify-content: center;
-        gap: 15px;
-        margin-bottom: 30px;
-    }
-
-    .tab {
-        padding: 12px 24px;
-        text-decoration: none;
-        color: var(--orange);
-        background: var(--black);
-        border: 3px solid var(--orange);
-        border-radius: 8px;
-        transition: all 0.2s ease-in-out;
-        box-shadow: 0 0 10px rgba(0,0,0,0.5) inset;
-    }
-
-    .tab:hover {
-        color: var(--black);
-        background: var(--orange);
-        text-shadow: none;
-        box-shadow: var(--glow);
-        transform: translateY(-5px);
-    }
-
-    .section {
-        background: #111;
-        padding: 20px;
-        margin-bottom: 25px;
-        border: 4px solid #222;
-        border-image: linear-gradient(45deg, var(--orange), var(--purple)) 1;
-        box-shadow: 0 0 15px rgba(0,0,0,0.7);
-    }
-
-    .section p, .section ul {
-        line-height: 1.8;
-        font-size: 0.9rem;
-    }
-    
-    ul {
-        list-style-type: none;
-    }
-
-    ul li {
-        margin-bottom: 10px;
-    }
-
-    a {
-        color: var(--purple);
-        text-decoration: none;
-        transition: color 0.2s;
-        text-shadow: 1px 1px var(--black);
-    }
-
-    a:hover {
-        color: var(--orange);
-        text-shadow: var(--glow);
-    }
-
-    .key-resources {
-        display: grid;
-        grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
-        gap: 20px;
-        text-align: center;
-    }
-
-    .key-resources div a {
-        display: inline-block;
-    }
-    
-    .key-resources img {
-        width: 120px;
-        height: 120px;
-        border: 3px solid var(--orange);
-        border-radius: 8px;
-        transition: transform 0.3s, box-shadow 0.3s;
-    }
-
-    .key-resources img:hover {
-        transform: scale(1.1);
-        box-shadow: var(--glow);
-    }
-
-    .key-resources p a {
-       font-size: 0.9rem;
-       color: var(--orange);
-    }
-
-    .game-logo-container {
-        text-align: center;
-    }
-
-    .game-logo-container img {
-        max-width: 200px;
-        border: 3px solid var(--purple);
-        border-radius: 5px;
-        transition: all 0.3s;
-    }
-    
-    .game-logo-container img:hover {
-        box-shadow: 0 0 10px var(--purple), 0 0 20px var(--purple);
-        transform: scale(1.05);
-    }
-
-    footer {
-        text-align: center;
-        padding: 20px;
-        margin-top: 30px;
-        color: var(--white);
-        font-size: 0.8rem;
-        text-shadow: 1px 1px var(--black);
-    }
-
-    /* Animations */
-    @keyframes flicker {
-        0%, 18%, 22%, 25%, 53%, 57%, 100% {
-            box-shadow: 0 0 5px var(--orange), 0 0 10px var(--orange), 0 0 20px var(--orange), 0 0 40px var(--orange);
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Wild Era Wiki</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --orange: #ff7f00;
+            --purple: #8A2BE2;
+            --black: #000000;
+            --white: #FFFFFF;
+            --glow: 0 0 5px var(--orange), 0 0 10px var(--orange), 0 0 20px var(--orange);
         }
-        20%, 24%, 55% {
-            box-shadow: none;
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
         }
-    }
 
-    @keyframes text-flicker {
-        0% { text-shadow: 0 0 5px var(--orange); }
-        50% { text-shadow: 0 0 20px var(--orange); }
-        100% { text-shadow: 0 0 5px var(--orange); }
-    }
+        body {
+            font-family: 'Press Start 2P', cursive;
+            background-color: var(--black);
+            color: var(--orange);
+            text-shadow: 2px 2px var(--black);
+            overflow-x: hidden;
+            position: relative;
+        }
 
-</style>
+        body::after {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: repeating-linear-gradient(
+                0deg,
+                rgba(0, 0, 0, 0.3) 0px,
+                rgba(0, 0, 0, 0.3) 1px,
+                transparent 1px,
+                transparent 2px
+            );
+            pointer-events: none;
+            z-index: 1000;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: auto;
+            padding: 20px;
+            position: relative;
+            z-index: 2;
+        }
+
+        header img {
+            max-width: 100%;
+            border: 4px solid var(--orange);
+            box-shadow: var(--glow);
+            border-radius: 8px;
+            animation: flicker 1.5s infinite alternate;
+        }
+
+        h1, h2 {
+            text-align: center;
+            margin-bottom: 25px;
+            color: var(--orange);
+            text-shadow: var(--glow);
+            animation: text-flicker 3s linear infinite;
+            font-size: 2.5rem;
+        }
+        
+        h2 {
+           font-size: 1.8rem;
+           margin-top: 20px;
+        }
+
+        .tabs {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 15px;
+            margin-bottom: 30px;
+        }
+
+        .tab {
+            padding: 12px 24px;
+            text-decoration: none;
+            color: var(--orange);
+            background: var(--black);
+            border: 3px solid var(--orange);
+            border-radius: 8px;
+            transition: all 0.2s ease-in-out;
+            box-shadow: 0 0 10px rgba(0,0,0,0.5) inset;
+        }
+
+        .tab:hover {
+            color: var(--black);
+            background: var(--orange);
+            text-shadow: none;
+            box-shadow: var(--glow);
+            transform: translateY(-5px);
+        }
+
+        .section {
+            background: #111;
+            padding: 20px;
+            margin-bottom: 25px;
+            border: 4px solid #222;
+            border-image: linear-gradient(45deg, var(--orange), var(--purple)) 1;
+            box-shadow: 0 0 15px rgba(0,0,0,0.7);
+        }
+
+        .section p, .section ul {
+            line-height: 1.8;
+            font-size: 0.9rem;
+        }
+        
+        ul {
+            list-style-type: none;
+        }
+
+        ul li {
+            margin-bottom: 10px;
+        }
+
+        a {
+            color: var(--purple);
+            text-decoration: none;
+            transition: color 0.2s;
+            text-shadow: 1px 1px var(--black);
+        }
+
+        a:hover {
+            color: var(--orange);
+            text-shadow: var(--glow);
+        }
+
+        .key-resources {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 20px;
+            text-align: center;
+        }
+
+        .key-resources div a {
+            display: inline-block;
+        }
+        
+        .key-resources img {
+            width: 120px;
+            height: 120px;
+            border: 3px solid var(--orange);
+            border-radius: 8px;
+            transition: transform 0.3s, box-shadow 0.3s;
+        }
+
+        .key-resources img:hover {
+            transform: scale(1.1);
+            box-shadow: var(--glow);
+        }
+
+        .key-resources p a {
+           font-size: 0.9rem;
+           color: var(--orange);
+        }
+
+        .game-logo-container {
+            text-align: center;
+        }
+
+        .game-logo-container img {
+            max-width: 200px;
+            border: 3px solid var(--purple);
+            border-radius: 5px;
+            transition: all 0.3s;
+        }
+        
+        .game-logo-container img:hover {
+            box-shadow: 0 0 10px var(--purple), 0 0 20px var(--purple);
+            transform: scale(1.05);
+        }
+
+        footer {
+            text-align: center;
+            padding: 20px;
+            margin-top: 30px;
+            color: var(--white);
+            font-size: 0.8rem;
+            text-shadow: 1px 1px var(--black);
+        }
+
+        /* Animations */
+        @keyframes flicker {
+            0%, 18%, 22%, 25%, 53%, 57%, 100% {
+                box-shadow: 0 0 5px var(--orange), 0 0 10px var(--orange), 0 0 20px var(--orange), 0 0 40px var(--orange);
+            }
+            20%, 24%, 55% {
+                box-shadow: none;
+            }
+        }
+
+        @keyframes text-flicker {
+            0% { text-shadow: 0 0 5px var(--orange); }
+            50% { text-shadow: 0 0 20px var(--orange); }
+            100% { text-shadow: 0 0 5px var(--orange); }
+        }
+
+    </style>
 </head>
 <body>
 
 <div class="container">
-<header>
-<img src="images/Banner.png" alt="Wild Era Banner">
-</header>
+    <header>
+        <img src="images/Banner.png" alt="Wild Era Banner">
+    </header>
 
-code
-Code
-download
-content_copy
-expand_less
-<h1>Wild Era Wiki</h1>
+    <h1>Wild Era Wiki</h1>
 
-<nav class="tabs">
-    <a href="index.html" class="tab">Trading</a>
-    <a href="value-list.html" class="tab">Value List</a>
-    <a href="mechanics.html" class="tab">Game Mechanics</a>
-    <a href="skins.html" class="tab">Skins</a>
-    <a href="creatures.html" class="tab">Creatures</a>
-</nav>
+    <nav class="tabs">
+        <a href="index.html" class="tab">Trading</a>
+        <a href="value-list.html" class="tab">Value List</a>
+        <a href="mechanics.html" class="tab">Game Mechanics</a>
+        <a href="skins.html" class="tab">Skins</a>
+        <a href="creatures.html" class="tab">Creatures</a>
+    </nav>
 
-<div class="section">
-    <p>Welcome to the Wild Era Wiki, your ultimate resource for all information about the game <em>Wild Era</em>! Explore trading, mechanics, creatures, skins, and more by clicking the tabs above.</p>
-</div>
+    <div class="section">
+        <p>Welcome to the Wild Era Wiki, your ultimate resource for all information about the game <em>Wild Era</em>! Explore trading, mechanics, creatures, skins, and more by clicking the tabs above.</p>
+    </div>
 
-<h2>Key Resources</h2>
-<div class="section key-resources">
-    <div><a href="creatures.html"><img src="images/CarnageCerato01.png" alt="Creatures"></a><p><a href="creatures.html">Creatures</a></p></div>
-    <div><a href="mechanics.html"><img src="images/GameEvent.png" alt="Game Mechanics"></a><p><a href="mechanics.html">Game Mechanics</a></p></div>
-    <div><a href="trading.html"><img src="images/TradingLogo.png" alt="Trading"></a><p><a href="trading.html">Trading</a></p></div>
-    <div><a href="skins.html"><img src="images/AlbinoIndovenator1.jpg" alt="Skins"></a><p><a href="skins.html">Skins</a></p></div>
-</div>
+    <h2>Key Resources</h2>
+    <div class="section key-resources">
+        <div><a href="creatures.html"><img src="images/CarnageCerato01.png" alt="Creatures"></a><p><a href="creatures.html">Creatures</a></p></div>
+        <div><a href="mechanics.html"><img src="images/GameEvent.png" alt="Game Mechanics"></a><p><a href="mechanics.html">Game Mechanics</a></p></div>
+        <div><a href="trading.html"><img src="images/TradingLogo.png" alt="Trading"></a><p><a href="trading.html">Trading</a></p></div>
+        <div><a href="skins.html"><img src="images/AlbinoIndovenator1.jpg" alt="Skins"></a><p><a href="skins.html">Skins</a></p></div>
+    </div>
 
-<h2>Access the Game</h2>
-<div class="section game-logo-container">
-    <a href="https://www.roblox.com/games/119283489130383/Wild-Era-Quetz-Deino"><img src="images/WELOGO1.webp" alt="Wild Era Logo"></a>
-</div>
+    <h2>Access the Game</h2>
+    <div class="section game-logo-container">
+        <a href="https://www.roblox.com/games/119283489130383/Wild-Era-Quetz-Deino"><img src="images/WELOGO1.webp" alt="Wild Era Logo"></a>
+    </div>
 
-<h2>Community</h2>
-<div class="section">
-    <ul>
-        <li><a href="https://discord.gg/5hKfJRFGf4">Official Discord</a></li>
-        <li><a href="https://www.roblox.com/groups/12020792/Wild-Studios#!/about">Roblox Group</a></li>
-        <li><a href="#">Patch Notes</a></li>
-    </ul>
-</div>
+    <h2>Community</h2>
+    <div class="section">
+        <ul>
+            <li><a href="https://discord.gg/5hKfJRFGf4">Official Discord</a></li>
+            <li><a href="https://www.roblox.com/groups/12020792/Wild-Studios#!/about">Roblox Group</a></li>
+            <li><a href="#">Patch Notes</a></li>
+        </ul>
+    </div>
 
-<footer>
-    <p>&copy; 2025 Wild Era Wiki. All rights reserved.</p>
-</footer>
+    <footer>
+        <p>&copy; 2025 Wild Era Wiki. All rights reserved.</p>
+    </footer>
 </div>
 
 </body>
