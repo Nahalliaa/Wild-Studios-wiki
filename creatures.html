@@ -1,1 +1,130 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Wild Era Wiki - Creatures</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --orange: #ff7f00; --purple: #9d00ff; --black: #000000; --section-bg: #1A1A1A; --white: #FFFFFF;
+            --glow-orange: 0 0 3px var(--orange), 0 0 8px var(--orange);
+        }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: 'Press Start 2P', cursive; background-color: var(--black); color: var(--orange); text-shadow: 1px 1px 2px var(--black); overflow-x: hidden; background-image: radial-gradient(circle, #111 0%, var(--black) 90%); }
+        body::after { content: ""; position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background: repeating-linear-gradient(0deg, rgba(0,0,0,0.4) 0, rgba(0,0,0,0.4) 1px, transparent 1px, transparent 2px); pointer-events: none; z-index: 1000; }
+        .container { max-width: 1400px; margin: auto; padding: 20px; }
+        .logo-container { text-align: center; margin-bottom: 30px; }
+        .logo-image { max-width: 250px; width: 100%; border-radius: 8px; border: 3px solid var(--orange); box-shadow: var(--glow-orange); animation: flicker 2s infinite alternate; }
+        h1, h2 { text-align: center; margin-bottom: 25px; color: var(--orange); text-shadow: var(--glow-orange); animation: text-flicker 4s linear infinite; font-size: 2.2rem; letter-spacing: 2px; }
+        h2 { font-size: 1.8rem; margin-top: 50px; color: var(--white); }
+        h2::before, h2::after { content: " -= "; color: var(--purple); }
+        .tabs { display: flex; flex-wrap: wrap; justify-content: center; gap: 15px; margin-bottom: 30px; }
+        .tab { padding: 12px 24px; text-decoration: none; color: var(--orange); background: var(--section-bg); border: 3px solid var(--orange); transition: all 0.2s ease-in-out; font-size: 0.9rem; }
+        .tab:hover, .tab.active { color: var(--black); background: var(--orange); text-shadow: none; box-shadow: var(--glow-orange); transform: translateY(-3px); }
+        footer { text-align: center; padding: 40px 20px; margin-top: 50px; color: var(--white); font-size: 0.8rem; opacity: 0.7; }
+        .creature-category { margin-bottom: 60px; }
+        .creature-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(180px, 1fr)); gap: 25px; }
+        .creature-card { display: block; text-decoration: none; background: var(--section-bg); border: 3px solid #333; padding: 20px; text-align: center; transition: transform 0.2s, border-color 0.2s, box-shadow 0.2s; border-radius: 6px; }
+        .creature-card:hover { transform: translateY(-5px); border-color: var(--orange); box-shadow: 0 5px 20px rgba(255, 127, 0, 0.3); }
+        .creature-card img { max-width: 100%; height: 120px; object-fit: contain; margin-bottom: 15px; }
+        .creature-card .name { font-size: clamp(0.8rem, 2vw, 1rem); color: var(--white); line-height: 1.4; word-wrap: break-word; }
+        @keyframes flicker { 0%, 18%, 22%, 25%, 53%, 57%, 100% { box-shadow: var(--glow-orange); } 20%, 24%, 55% { box-shadow: 0 0 2px var(--orange); } }
+        @keyframes text-flicker { 0%, 100% { opacity: 1; } 50% { opacity: 0.8; } }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="logo-container">
+             <img src="/Wild-Studios-wiki/images/WSL.png" alt="Wild Studios Logo" class="logo-image">
+        </div>
+        <h1>Wild Era Creatures</h1>
+        <nav class="tabs">
+            <a href="/Wild-Studios-wiki/index.html" class="tab">Home</a>
+            <a href="/Wild-Studios-wiki/value-list.html" class="tab">Value List</a>
+            <a href="/Wild-Studios-wiki/pages/trade-simulator.html" class="tab">Trade Simulator</a>
+            <a href="/Wild-Studios-wiki/mechanics.html" class="tab">Game Mechanics</a>
+            <a href="/Wild-Studios-wiki/skins.html" class="tab">Skins</a>
+            <a href="/Wild-Studios-wiki/creatures.html" class="tab active">Creatures</a>
+        </nav>
 
+        <div class="creature-category">
+            <h2>Hybrids</h2>
+            <div class="creature-grid">
+                <a href="/Wild-Studios-wiki/pages/profile/Indominator.html" class="creature-card"><img src="/Wild-Studios-wiki/images/creatures/Indominator.png" alt="Indominator"><div class="name">Indominator</div></a>
+                <a href="/Wild-Studios-wiki/pages/profile/Dilonontosaurus.html" class="creature-card"><img src="/Wild-Studios-wiki/images/creatures/Dilonontosaurus.png" alt="Dilonontosaurus"><div class="name">Dilonontosaurus</div></a>
+                <a href="/Wild-Studios-wiki/pages/profile/Ankyceratops.html" class="creature-card"><img src="/Wild-Studios-wiki/images/creatures/Ankyceratops.png" alt="Ankyceratops"><div class="name">Ankyceratops</div></a>
+                <a href="/Wild-Studios-wiki/pages/profile/Indovenator.html" class="creature-card"><img src="/Wild-Studios-wiki/images/creatures/Indovenator.png" alt="Indovenator"><div class="name">Indovenator</div></a>
+                <a href="/Wild-Studios-wiki/pages/profile/Yutyovenator.html" class="creature-card"><img src="/Wild-Studios-wiki/images/creatures/Yutyovenator.png" alt="Yutyovenator"><div class="name">Yutyovenator</div></a>
+            </div>
+        </div>
+
+        <div class="creature-category">
+            <h2>Terrestrial</h2>
+            <div class="creature-grid">
+                <a href="/Wild-Studios-wiki/pages/profile/Ankylosaurus.html" class="creature-card"><img src="/Wild-Studios-wiki/images/creatures/Ankylosaurus.png" alt="Ankylosaurus"><div class="name">Ankylosaurus</div></a>
+                <a href="/Wild-Studios-wiki/pages/profile/Ceratosaurus.html" class="creature-card"><img src="/Wild-Studios-wiki/images/creatures/Ceratosaurus.png" alt="Ceratosaurus"><div class="name">Ceratosaurus</div></a>
+                <a href="/Wild-Studios-wiki/pages/profile/Giganotosaurus.html" class="creature-card"><img src="/Wild-Studios-wiki/images/creatures/Giganotosaurus.png" alt="Giganotosaurus"><div class="name">Giganotosaurus</div></a>
+                <a href="/Wild-Studios-wiki/pages/profile/Tenontosaurus.html" class="creature-card"><img src="/Wild-Studios-wiki/images/creatures/Tenontosaurus.png" alt="Tenontosaurus"><div class="name">Tenontosaurus</div></a>
+                <a href="/Wild-Studios-wiki/pages/profile/Pachycephalosaurus.html" class="creature-card"><img src="/Wild-Studios-wiki/images/creatures/Pachycephalosaurus.png" alt="Pachycephalosaurus"><div class="name">Pachycephalosaurus</div></a>
+                <a href="/Wild-Studios-wiki/pages/profile/Triceratops.html" class="creature-card"><img src="/Wild-Studios-wiki/images/creatures/Triceratops.png" alt="Triceratops"><div class="name">Triceratops</div></a>
+                <a href="/Wild-Studios-wiki/pages/profile/Brachiosaurus.html" class="creature-card"><img src="/Wild-Studios-wiki/images/creatures/Brachiosaurus.png" alt="Brachiosaurus"><div class="name">Brachiosaurus</div></a>
+                <a href="/Wild-Studios-wiki/pages/profile/Dimetrodon.html" class="creature-card"><img src="/Wild-Studios-wiki/images/creatures/Dimetrodon.png" alt="Dimetrodon"><div class="name">Dimetrodon</div></a>
+                <a href="/Wild-Studios-wiki/pages/profile/Yutyrannus.html" class="creature-card"><img src="/Wild-Studios-wiki/images/creatures/Yutyrannus.png" alt="Yutyrannus"><div class="name">Yutyrannus</div></a>
+                <a href="/Wild-Studios-wiki/pages/profile/Spinosaurus.html" class="creature-card"><img src="/Wild-Studios-wiki/images/creatures/Spinosaurus.png" alt="Spinosaurus"><div class="name">Spinosaurus</div></a>
+                <a href="/Wild-Studios-wiki/pages/profile/Carnotaurus.html" class="creature-card"><img src="/Wild-Studios-wiki/images/creatures/Carnotaurus.png" alt="Carnotaurus"><div class="name">Carnotaurus</div></a>
+                <a href="/Wild-Studios-wiki/pages/profile/Utahraptor.html" class="creature-card"><img src="/Wild-Studios-wiki/images/creatures/Utahraptor.png" alt="Utahraptor"><div class="name">Utahraptor</div></a>
+                <a href="/Wild-Studios-wiki/pages/profile/Tyrannosaurus_Rex.html" class="creature-card"><img src="/Wild-Studios-wiki/images/creatures/Tyrannosaurus_Rex.png" alt="Tyrannosaurus Rex"><div class="name">Tyrannosaurus Rex</div></a>
+                <a href="/Wild-Studios-wiki/pages/profile/Saurolophus.html" class="creature-card"><img src="/Wild-Studios-wiki/images/creatures/Saurolophus.png" alt="Saurolophus"><div class="name">Saurolophus</div></a>
+                <a href="/Wild-Studios-wiki/pages/profile/Dilophosaurus.html" class="creature-card"><img src="/Wild-Studios-wiki/images/creatures/Dilophosaurus.png" alt="Dilophosaurus"><div class="name">Dilophosaurus</div></a>
+            </div>
+        </div>
+
+        <div class="creature-category">
+            <h2>Semi-Aquatic</h2>
+            <div class="creature-grid">
+                <a href="/Wild-Studios-wiki/pages/profile/Dilononto.html" class="creature-card"><img src="/Wild-Studios-wiki/images/creatures/Dilononto.png" alt="Dilononto"><div class="name">Dilononto</div></a>
+                <a href="/Wild-Studios-wiki/pages/profile/Ichthyovenator.html" class="creature-card"><img src="/Wild-Studios-wiki/images/creatures/Ichthyovenator.png" alt="Ichthyovenator"><div class="name">Ichthyovenator</div></a>
+                <a href="/Wild-Studios-wiki/pages/profile/Deinosuchus.html" class="creature-card"><img src="/Wild-Studios-wiki/images/creatures/Deinosuchus.png" alt="Deinosuchus"><div class="name">Deinosuchus</div></a>
+            </div>
+        </div>
+        
+        <div class="creature-category">
+            <h2>Aquatic</h2>
+            <div class="creature-grid">
+                <a href="/Wild-Studios-wiki/pages/profile/Mosasaurus.html" class="creature-card"><img src="/Wild-Studios-wiki/images/creatures/Mosasaurus.png" alt="Mosasaurus"><div class="name">Mosasaurus</div></a>
+            </div>
+        </div>
+
+        <div class="creature-category">
+            <h2>Flyer</h2>
+            <div class="creature-grid">
+                <a href="/Wild-Studios-wiki/pages/profile/Quetzalcoatlus.html" class="creature-card"><img src="/Wild-Studios-wiki/images/creatures/Quetzalcoatlus.png" alt="Quetzalcoatlus"><div class="name">Quetzalcoatlus</div></a>
+                <a href="/Wild-Studios-wiki/pages/profile/Tupandactylus.html" class="creature-card"><img src="/Wild-Studios-wiki/images/creatures/Tupandactylus.png" alt="Tupandactylus"><div class="name">Tupandactylus</div></a>
+                <a href="/Wild-Studios-wiki/pages/profile/Pteranodon.html" class="creature-card"><img src="/Wild-Studios-wiki/images/creatures/Pteranodon.png" alt="Pteranodon"><div class="name">Pteranodon</div></a>
+            </div>
+        </div>
+
+        <div class="creature-category">
+            <h2>Special</h2>
+            <div class="creature-grid">
+                <a href="/Wild-Studios-wiki/pages/profile/Dodo.html" class="creature-card"><img src="/Wild-Studios-wiki/images/creatures/Dodo.png" alt="Dodo"><div class="name">Dodo</div></a>
+                <a href="/Wild-Studios-wiki/pages/profile/Capybara.html" class="creature-card"><img src="/Wild-Studios-wiki/images/creatures/Capybara.png" alt="Capybara"><div class="name">Capybara</div></a>
+            </div>
+        </div>
+        
+        <div class="creature-category">
+            <h2>Dev Only</h2>
+            <div class="creature-grid">
+                 <a href="/Wild-Studios-wiki/pages/profile/Cyborg.html" class="creature-card"><img src="/Wild-Studios-wiki/images/creatures/Cyborg.png" alt="Cyborg-Alloquakus"><div class="name">Cyborg-Alloquakus</div></a>
+            </div>
+        </div>
+
+        <footer>
+            <p>&copy; 2025 Wild Era Wiki. All rights reserved.</p>
+        </footer>
+    </div>
+</body>
+</html>
