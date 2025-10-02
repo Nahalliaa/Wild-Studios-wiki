@@ -12,11 +12,13 @@
             --orange: #ff7f00;
             --purple: #9d00ff;
             --black: #000000;
-            --dark-grey: #1a1a1a;
+            /* Darkened the grey for a moodier feel */
+            --dark-base: #101010; 
             --white: #FFFFFF;
 
-            --glow-orange: 0 0 5px var(--orange), 0 0 10px var(--orange), 0 0 20px var(--orange);
-            --glow-purple: 0 0 8px var(--purple), 0 0 15px var(--purple);
+            /* Subdued glows for a darker atmosphere */
+            --glow-orange: 0 0 3px var(--orange), 0 0 8px var(--orange);
+            --glow-purple: 0 0 5px var(--purple), 0 0 12px var(--purple);
         }
 
         * {
@@ -31,7 +33,8 @@
             color: var(--orange);
             text-shadow: 1px 1px 2px var(--black);
             overflow-x: hidden;
-            background-image: radial-gradient(circle, #222 0%, var(--black) 80%);
+            /* Made the gradient start darker and be more subtle */
+            background-image: radial-gradient(circle, #111 0%, var(--black) 90%);
         }
         
         /* CRT Scanlines Overlay */
@@ -42,7 +45,7 @@
             left: 0;
             width: 100vw;
             height: 100vh;
-            background: repeating-linear-gradient(0deg, rgba(0,0,0,0.3) 0, rgba(0,0,0,0.3) 1px, transparent 1px, transparent 2px);
+            background: repeating-linear-gradient(0deg, rgba(0,0,0,0.4) 0, rgba(0,0,0,0.4) 1px, transparent 1px, transparent 2px);
             pointer-events: none;
             z-index: 1000;
         }
@@ -55,8 +58,8 @@
         
         header {
             margin-bottom: 30px;
-            padding: 10px;
-            border: 4px solid var(--orange);
+            padding: 8px;
+            border: 3px solid var(--orange);
             box-shadow: var(--glow-orange);
             animation: flicker 2s infinite alternate;
         }
@@ -99,7 +102,7 @@
             padding: 12px 24px;
             text-decoration: none;
             color: var(--orange);
-            background: var(--dark-grey);
+            background: var(--dark-base);
             border: 3px solid var(--orange);
             transition: all 0.2s ease-in-out;
             font-size: 0.9rem;
@@ -114,7 +117,7 @@
         }
 
         .content-box {
-            background: var(--dark-grey);
+            background: var(--dark-base);
             border: 4px solid var(--purple);
             box-shadow: var(--glow-purple);
             padding: 25px;
@@ -141,7 +144,7 @@
 
         .content-box ul li {
             padding: 8px 0;
-            border-bottom: 1px dashed #444;
+            border-bottom: 1px dashed #333; /* Darker dash */
         }
 
         .content-box ul li::before {
@@ -156,8 +159,8 @@
         }
 
         .resource-card {
-            background: var(--dark-grey);
-            border: 4px solid #333;
+            background: var(--dark-base);
+            border: 4px solid #222; /* Darker initial border */
             padding: 20px;
             text-align: center;
             transition: transform 0.2s, box-shadow 0.2s, border-color 0.2s;
@@ -174,7 +177,8 @@
             left: -50%;
             width: 200%;
             height: 200%;
-            background: conic-gradient(transparent, rgba(157, 0, 255, 0.25), transparent 30%);
+            /* Lowered opacity of the rotating gradient */
+            background: conic-gradient(transparent, rgba(157, 0, 255, 0.15), transparent 30%);
             animation: rotate 4s linear infinite;
             opacity: 0;
             transition: opacity 0.3s;
@@ -183,7 +187,8 @@
         .resource-card:hover {
             transform: scale(1.05);
             border-color: var(--purple);
-            box-shadow: 0 0 25px rgba(0,0,0,0.8);
+            /* Darker hover shadow */
+            box-shadow: 0 0 25px rgba(0,0,0,0.9);
         }
 
         .resource-card:hover::before {
@@ -195,7 +200,7 @@
             height: 120px;
             object-fit: cover;
             margin-bottom: 15px;
-            background: rgba(0,0,0,0.4);
+            background: rgba(0,0,0,0.6);
             padding: 5px;
             border: 2px solid var(--purple);
         }
@@ -227,13 +232,14 @@
             margin-top: 50px;
             color: var(--white);
             font-size: 0.8rem;
+            opacity: 0.7; /* Slightly faded out footer */
             text-shadow: 1px 1px var(--black);
         }
 
         /* Animations */
         @keyframes flicker {
             0%, 18%, 22%, 25%, 53%, 57%, 100% { box-shadow: var(--glow-orange); }
-            20%, 24%, 55% { box-shadow: none; }
+            20%, 24%, 55% { box-shadow: 0 0 2px var(--orange); }
         }
         @keyframes text-flicker { 0%, 100% { opacity: 1; } 50% { opacity: 0.8; } }
         @keyframes rotate { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
@@ -289,7 +295,7 @@
 
     <h2>Access the Game</h2>
     <div class="content-box game-access">
-        <a href="https://www.roblox.com/games/119283489130383/Wild-Era-Quetz-Deino">
+        <a href="https://www.roblox.com/games/119283489130383/Wild-Era-Quetz-Deino" target="_blank">
             <img src="images/WELOGO1.webp" alt="Wild Era Game Logo">
         </a>
     </div>
