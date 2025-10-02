@@ -18,7 +18,7 @@
         body::after { content: ""; position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background: repeating-linear-gradient(0deg, rgba(0,0,0,0.4) 0, rgba(0,0,0,0.4) 1px, transparent 1px, transparent 2px); pointer-events: none; z-index: 1000; }
         .sidebar { position: fixed; top: 0; left: 0; width: var(--sidebar-width); height: 100%; background: var(--sidebar-bg); border-right: 3px solid var(--purple); box-shadow: var(--glow-purple); z-index: 200; transform: translateX(-100%); transition: transform 0.3s ease-in-out; display: flex; flex-direction: column; padding: 20px; font-size: 0.9rem; }
         .sidebar.active { transform: translateX(0); }
-        .nav-link { display: block; color: var(--orange); text-decoration: none; padding: 12px 10px; margin-bottom: 5px; transition: all 0.2s; }
+        .nav-link { display: block; color: var(--orange); text-decoration: none; padding: 12px 10px; margin-bottom: 5px; transition: all 0.2s; font-size: 1rem; }
         .nav-link:hover, .nav-link.active { background: var(--orange); color: var(--black); text-shadow: none; box-shadow: var(--glow-orange); }
         .sidebar-toggle { position: fixed; top: 15px; left: 15px; width: 50px; height: 50px; background: var(--section-bg); border: 2px solid var(--orange); z-index: 201; cursor: pointer; display: flex; flex-direction: column; justify-content: space-around; padding: 10px; border-radius: 4px; }
         .sidebar-toggle .bar { width: 100%; height: 3px; background: var(--orange); transition: all 0.3s ease-in-out; }
@@ -34,7 +34,6 @@
         @media (min-width: 1024px) { .sidebar-toggle, .overlay { display: none; } .sidebar { transform: translateX(0); } .main-content { margin-left: var(--sidebar-width); } }
         @keyframes text-flicker { 0%, 100% { opacity: 1; } 50% { opacity: 0.8; } }
 
-        /* --- LIVE TRADE SIMULATOR STYLES (Restored) --- */
         .trade-container { border: 4px solid var(--purple); box-shadow: var(--glow-purple); padding: clamp(15px, 3vw, 30px); background: #101010; }
         .trade-interface { display: flex; flex-direction: column; gap: 20px; }
         .trade-side { padding: 15px; border: 2px solid #444; display: flex; flex-direction: column; background: var(--section-bg); }
@@ -68,19 +67,18 @@
         .custom-select-wrapper.active .custom-options { display: block; }
         .custom-option { padding: 12px; cursor: pointer; }
         .custom-option:hover { background: var(--orange); color: var(--black); text-shadow: none; }
-
-        /* --- TRADE RECEIPT STYLES (For Image Generation ONLY) --- */
+        
         #trade-receipt { display: none; position: absolute; left: -9999px; top: 0; width: 800px; padding: 25px; background: #181818; color: var(--white); font-family: 'Press Start 2P', cursive; border: 5px solid var(--purple); overflow: hidden; }
         .receipt-filter { position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: linear-gradient(to top right, rgba(157, 0, 255, 0.1), rgba(255, 127, 0, 0.1)); pointer-events: none; }
         .receipt-logo { position: absolute; top: 15px; right: 15px; width: 60px; opacity: 0.3; }
         .receipt-title { text-align: center; font-size: 2rem; color: var(--orange); text-shadow: 0 0 8px var(--orange); margin-bottom: 40px; }
-        .receipt-body { display: flex; justify-content: space-between; gap: 20px; }
+        .receipt-body { display: flex; justify-content: space-between; gap: 20px; padding: 0 20px; }
         .receipt-side { width: 48%; font-size: 1rem; }
         .receipt-side h3 { font-size: 1.2rem; padding-bottom: 8px; margin-bottom: 15px; border-bottom: 2px solid; }
         .receipt-side-my h3 { color: var(--orange); border-color: var(--orange); }
         .receipt-side-your h3 { color: var(--win-green); border-color: var(--win-green); }
         .receipt-items { list-style: none; min-height: 150px; line-height: 2; color: #ddd; }
-        .receipt-total { font-size: 1.1rem; text-align: center; margin-top: 20px; padding: 12px; background: #000; border: 2px solid #fff; }
+        .receipt-total { font-size: 1.1rem; text-align: center; margin-top: 20px; padding: 12px; background: #000; }
         .receipt-footer { text-align: center; margin-top: 30px; font-size: 1.2rem; }
 
         @media (min-width: 900px) { .trade-interface { flex-direction: row; align-items: stretch; } .trade-side { width: 45%; } .trade-separator { display: flex; align-items: center; justify-content: center; font-size: 3rem; color: var(--purple); text-shadow: var(--glow-purple); } #result-display { font-size: 2rem; } .action-buttons { flex-direction: row; } }
@@ -161,18 +159,19 @@
             const currentPage = "/Wild-Studios-wiki" + window.location.pathname.substring(window.location.pathname.lastIndexOf('/'));
             document.querySelectorAll('.sidebar .nav-link').forEach(link => { if (link.getAttribute('href') === currentPage) { link.classList.add('active'); } });
 
-            const tradeValues = { "PBC": 170000, "Movie Brachio": 111000, "Movie Mosa": 90000, "Suited Capy": 90000, "Movie Spino": 80000, "Indor Bone": 76000, "Movie Rex": 73000, "Carnage Cerato": 70000, "Movie Trike": 69000, "Indom Bone": 67000 };
-            let player1Offer = {}; let player2Offer = {}; let lastResult = { text: "ANALYSIS PENDING", color: "var(--white)" };
+            const tradeValues = { "PBC": 170000, "Movie Brachio": 111000, "Movie Mosa": 90000, "Suited Capy": 90000, "Movie Spino": 80000, "Indor Bone": 76000, "Movie Rex": 73000, "Carnage Cerato": 70000, "Movie Trike": 69000, "Indom Bone": 67000, "Carnage Rex": 53000 };
+            let player1Offer = {}; let player2Offer = {};
             
             function createCustomSelect(wrapperId) {
                 const wrapper = document.getElementById(wrapperId);
                 const trigger = wrapper.querySelector('.custom-select-trigger');
                 const optionsContainer = wrapper.querySelector('.custom-options');
                 let selectedValue = "";
-                Object.keys(tradeValues).forEach(item => {
+                const items = {"DNA": 1, ...tradeValues};
+                Object.keys(items).forEach(item => {
                     const option = document.createElement('div');
                     option.className = 'custom-option';
-                    option.textContent = `${item} (${tradeValues[item].toLocaleString()} DNA)`;
+                    option.textContent = item;
                     option.addEventListener('click', () => {
                         selectedValue = item;
                         trigger.querySelector('span').textContent = item;
@@ -192,7 +191,7 @@
                 document.getElementById(`${player}-dna-input`).addEventListener('keypress', e => { if (e.key === 'Enter') addDna(player, offerObj); });
             }
 
-            function addItem(offerObj, selectedItem) { if (selectedItem) { offerObj[selectedItem] = (offerObj[selectedItem] || 0) + 1; updateUI(); } }
+            function addItem(offerObj, selectedItem) { if (selectedItem) { if(selectedItem === 'DNA'){ addDnaFromButton(Object.keys({player1Offer, player2Offer}).find(key => offerObj === {player1Offer, player2Offer}[key]).slice(0, -5), offerObj); } else { offerObj[selectedItem] = (offerObj[selectedItem] || 0) + 1; updateUI(); } } }
             function addDna(player, offerObj) { const input = document.getElementById(`${player}-dna-input`); const dna = parseInt(input.value, 10); if (!isNaN(dna) && dna > 0) { offerObj['DNA'] = (offerObj['DNA'] || 0) + dna; input.value = ''; updateUI(); } }
             function removeItem(offerObj, item) { if (item === 'DNA') delete offerObj['DNA']; else { offerObj[item]--; if (offerObj[item] <= 0) delete offerObj[item]; } updateUI(); }
             function calculateTotal(offerObj) { return Object.keys(offerObj).reduce((sum, key) => sum + ((tradeValues[key] || 1) * offerObj[key]), 0); }
@@ -216,22 +215,30 @@
                 });
             }
             
-            document.getElementById('compare-button').addEventListener('click', () => {
+            function runAnalysis() {
                 const p1Total = calculateTotal(player1Offer);
                 const p2Total = calculateTotal(player2Offer);
                 const difference = p2Total - p1Total;
-                const resultDisplay = document.getElementById('result-display');
-                if (p1Total === 0 && p2Total === 0) { lastResult = { text: "ANALYSIS PENDING", color: "var(--white)" }; return; }
+                if (p1Total === 0 && p2Total === 0) { return { text: "ANALYSIS PENDING", color: "var(--white)", liveText: "" }; }
                 const percentageDiff = p1Total > 0 ? Math.abs(difference) / p1Total : 1;
                 let text, className, color;
-                if (percentageDiff < 0.05) { text = "Fair Trade!"; className = 'fair-trade'; color = "var(--white)"; }
-                else if (difference > 0) { text = `Win! (+${difference.toLocaleString()} DNA)`; className = percentageDiff > 0.25 ? 'big-win' : 'win'; color = "var(--win-green)"; }
-                else { text = `Lose! (${difference.toLocaleString()} DNA)`; className = percentageDiff > 0.25 ? 'big-lose' : 'lose'; color = "var(--lose-red)"; }
-                resultDisplay.textContent = text; resultDisplay.className = className; resultDisplay.classList.add('visible');
-                lastResult = { text: `Result: ${text.split('(')[0].trim()}`, color: color };
+                if (percentageDiff < 0.05) { text = "FAIR TRADE"; liveText = "Fair Trade!"; className = 'fair-trade'; color = "var(--white)"; }
+                else if (difference > 0) { liveText = `Win! (+${difference.toLocaleString()} DNA)`; text = `WIN (+${difference.toLocaleString()})`; className = percentageDiff > 0.25 ? 'big-win' : 'win'; color = "var(--win-green)"; }
+                else { liveText = `Lose! (${difference.toLocaleString()} DNA)`; text = `LOSE (${difference.toLocaleString()})`; className = percentageDiff > 0.25 ? 'big-lose' : 'lose'; color = "var(--lose-red)"; }
+                return { text: `Result: ${text}`, color, liveText, className };
+            }
+
+            document.getElementById('compare-button').addEventListener('click', () => {
+                const result = runAnalysis();
+                const resultDisplay = document.getElementById('result-display');
+                if (!result.liveText) { resultDisplay.classList.remove('visible'); return; }
+                resultDisplay.textContent = result.liveText;
+                resultDisplay.className = result.className;
+                resultDisplay.classList.add('visible');
             });
 
             document.getElementById('save-image-button').addEventListener('click', () => {
+                const result = runAnalysis();
                 const receipt = document.getElementById('trade-receipt');
                 const myTotal = calculateTotal(player1Offer);
                 const yourTotal = calculateTotal(player2Offer);
@@ -248,13 +255,16 @@
                 Object.keys(player2Offer).sort().forEach(item => { yourItemsUl.innerHTML += `<li>${player2Offer[item].toLocaleString()}x ${item}</li>`; });
 
                 const resultEl = document.getElementById('receipt-result');
-                resultEl.textContent = lastResult.text;
-                resultEl.style.color = lastResult.color;
+                resultEl.textContent = result.text;
+                resultEl.style.color = result.color;
+                
+                const randomHash = Math.random().toString(16).slice(2, 10);
+                const filename = `wild-era-trade-${randomHash}.png`;
 
                 receipt.style.display = 'block';
                 html2canvas(receipt, { backgroundColor: '#181818' }).then(canvas => {
                     const link = document.createElement('a');
-                    link.download = 'wild-era-trade.png';
+                    link.download = filename;
                     link.href = canvas.toDataURL();
                     link.click();
                     receipt.style.display = 'none';
