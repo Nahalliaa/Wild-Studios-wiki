@@ -12,11 +12,9 @@
             --orange: #ff7f00;
             --purple: #9d00ff;
             --black: #000000;
-            /* Darkened the grey for a moodier feel */
-            --dark-base: #101010; 
+            --section-bg: #1A1A1A;
             --white: #FFFFFF;
 
-            /* Subdued glows for a darker atmosphere */
             --glow-orange: 0 0 3px var(--orange), 0 0 8px var(--orange);
             --glow-purple: 0 0 5px var(--purple), 0 0 12px var(--purple);
         }
@@ -33,11 +31,10 @@
             color: var(--orange);
             text-shadow: 1px 1px 2px var(--black);
             overflow-x: hidden;
-            /* Made the gradient start darker and be more subtle */
             background-image: radial-gradient(circle, #111 0%, var(--black) 90%);
         }
         
-        /* CRT Scanlines Overlay */
+        /* Sonar/CRT Scanlines Overlay */
         body::after {
             content: "";
             position: fixed;
@@ -56,17 +53,19 @@
             padding: 20px;
         }
         
-        header {
+        /* New Logo Container */
+        .logo-container {
+            text-align: center;
             margin-bottom: 30px;
-            padding: 8px;
+        }
+
+        .logo-image {
+            max-width: 250px; /* Controls the size of the logo */
+            width: 100%;
+            border-radius: 8px;
             border: 3px solid var(--orange);
             box-shadow: var(--glow-orange);
             animation: flicker 2s infinite alternate;
-        }
-
-        header img {
-            width: 100%;
-            display: block;
         }
 
         h1, h2 {
@@ -102,7 +101,7 @@
             padding: 12px 24px;
             text-decoration: none;
             color: var(--orange);
-            background: var(--dark-base);
+            background: var(--section-bg);
             border: 3px solid var(--orange);
             transition: all 0.2s ease-in-out;
             font-size: 0.9rem;
@@ -116,98 +115,67 @@
             transform: translateY(-3px);
         }
 
-        .content-box {
-            background: var(--dark-base);
-            border: 4px solid var(--purple);
-            box-shadow: var(--glow-purple);
+        .section {
+            background: var(--section-bg);
             padding: 25px;
             margin-bottom: 25px;
+            border: 4px solid;
+            border-image: linear-gradient(45deg, var(--orange), var(--purple)) 1;
+            box-shadow: 0 0 20px rgba(0,0,0,0.7);
             font-size: 0.9rem;
             line-height: 1.8;
         }
 
-        .content-box a {
+        .section a {
             color: var(--purple);
             text-decoration: none;
             transition: color 0.2s, text-shadow 0.2s;
         }
 
-        .content-box a:hover {
+        .section a:hover {
             color: var(--orange);
             text-shadow: var(--glow-orange);
         }
 
-        .content-box ul {
+        .section ul {
             list-style: none;
             padding-left: 10px;
         }
 
-        .content-box ul li {
+        .section ul li {
             padding: 8px 0;
-            border-bottom: 1px dashed #333; /* Darker dash */
+            border-bottom: 1px dashed #333;
         }
 
-        .content-box ul li::before {
+        .section ul li::before {
             content: '>> ';
             color: var(--orange);
         }
 
-        .resource-grid {
+        .key-resources {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
             gap: 25px;
-        }
-
-        .resource-card {
-            background: var(--dark-base);
-            border: 4px solid #222; /* Darker initial border */
-            padding: 20px;
             text-align: center;
-            transition: transform 0.2s, box-shadow 0.2s, border-color 0.2s;
-            position: relative;
-            overflow: hidden;
-            text-decoration: none;
-            color: var(--orange);
-        }
-        
-        .resource-card::before {
-            content: '';
-            position: absolute;
-            top: -50%;
-            left: -50%;
-            width: 200%;
-            height: 200%;
-            /* Lowered opacity of the rotating gradient */
-            background: conic-gradient(transparent, rgba(157, 0, 255, 0.15), transparent 30%);
-            animation: rotate 4s linear infinite;
-            opacity: 0;
-            transition: opacity 0.3s;
         }
 
-        .resource-card:hover {
-            transform: scale(1.05);
-            border-color: var(--purple);
-            /* Darker hover shadow */
-            box-shadow: 0 0 25px rgba(0,0,0,0.9);
-        }
-
-        .resource-card:hover::before {
-            opacity: 1;
-        }
-
-        .resource-card img {
+        .key-resources img {
             width: 120px;
             height: 120px;
             object-fit: cover;
-            margin-bottom: 15px;
-            background: rgba(0,0,0,0.6);
-            padding: 5px;
-            border: 2px solid var(--purple);
+            border: 3px solid var(--orange);
+            border-radius: 8px;
+            transition: transform 0.3s, box-shadow 0.3s;
         }
 
-        .resource-card .name {
-            font-size: 1rem;
-            color: var(--white);
+        .key-resources img:hover {
+            transform: scale(1.1);
+            box-shadow: var(--glow-orange);
+        }
+        
+        .key-resources p a {
+           font-size: 0.9rem;
+           color: var(--orange);
         }
         
         .game-access {
@@ -232,7 +200,7 @@
             margin-top: 50px;
             color: var(--white);
             font-size: 0.8rem;
-            opacity: 0.7; /* Slightly faded out footer */
+            opacity: 0.7;
             text-shadow: 1px 1px var(--black);
         }
 
@@ -242,12 +210,12 @@
             20%, 24%, 55% { box-shadow: 0 0 2px var(--orange); }
         }
         @keyframes text-flicker { 0%, 100% { opacity: 1; } 50% { opacity: 0.8; } }
-        @keyframes rotate { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
         
         @media (max-width: 600px) {
             h1 { font-size: 1.8rem; }
             h2 { font-size: 1.5rem; }
             .tab { padding: 10px 15px; font-size: 0.8rem; }
+            .key-resources img { width: 100px; height: 100px; }
         }
 
     </style>
@@ -255,9 +223,9 @@
 <body>
 
 <div class="container">
-    <header>
-        <img src="images/Banner.png" alt="Wild Era Banner">
-    </header>
+    <div class="logo-container">
+        <img src="images/WSL.png" alt="Wild Studios Logo" class="logo-image">
+    </div>
 
     <h1>Wild Era Wiki</h1>
 
@@ -269,39 +237,39 @@
         <a href="creatures.html" class="tab">Creatures</a>
     </nav>
 
-    <div class="content-box">
+    <div class="section">
         <p>Welcome to the Wild Era Wiki, your ultimate resource for all information about the game! Explore trading, values, creatures, skins, and more by selecting a category above.</p>
     </div>
 
     <h2>Key Resources</h2>
-    <div class="resource-grid">
-        <a href="creatures.html" class="resource-card">
-            <img src="images/CarnageCerato01.png" alt="Creatures">
-            <div class="name">Creatures</div>
-        </a>
-        <a href="mechanics.html" class="resource-card">
-            <img src="images/GameEvent.png" alt="Game Mechanics">
-            <div class="name">Game Mechanics</div>
-        </a>
-        <a href="value-list.html" class="resource-card">
-            <img src="images/TradingLogo.png" alt="Trading">
-            <div class="name">Trading & Values</div>
-        </a>
-        <a href="skins.html" class="resource-card">
-            <img src="images/AlbinoIndovenator1.jpg" alt="Skins">
-            <div class="name">Skins</div>
-        </a>
+    <div class="section key-resources">
+        <div>
+            <a href="creatures.html"><img src="images/CarnageCerato01.png" alt="Creatures"></a>
+            <p><a href="creatures.html">Creatures</a></p>
+        </div>
+        <div>
+            <a href="mechanics.html"><img src="images/GameEvent.png" alt="Game Mechanics"></a>
+            <p><a href="mechanics.html">Game Mechanics</a></p>
+        </div>
+        <div>
+            <a href="value-list.html"><img src="images/TradingLogo.png" alt="Trading"></a>
+            <p><a href="value-list.html">Trading & Values</a></p>
+        </div>
+        <div>
+            <a href="skins.html"><img src="images/AlbinoIndovenator1.jpg" alt="Skins"></a>
+            <p><a href="skins.html">Skins</a></p>
+        </div>
     </div>
 
     <h2>Access the Game</h2>
-    <div class="content-box game-access">
+    <div class="section game-access">
         <a href="https://www.roblox.com/games/119283489130383/Wild-Era-Quetz-Deino" target="_blank">
             <img src="images/WELOGO1.webp" alt="Wild Era Game Logo">
         </a>
     </div>
 
     <h2>Community</h2>
-    <div class="content-box">
+    <div class="section">
         <ul>
             <li><a href="https://discord.gg/5hKfJRFGf4" target="_blank">Official Discord</a></li>
             <li><a href="https://www.roblox.com/groups/12020792/Wild-Studios#!/about" target="_blank">Roblox Group</a></li>
