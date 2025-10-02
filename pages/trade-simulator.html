@@ -1,0 +1,269 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Wild Era Wiki - Trade Simulator</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+    <style>
+        :root {
+            --orange: #ff7f00; --purple: #9d00ff; --black: #000000; --section-bg: #1A1A1A; --sidebar-bg: #101010; --white: #FFFFFF; --win-green: #00ff88; --lose-red: #ff5555;
+            --glow-orange: 0 0 3px var(--orange), 0 0 8px var(--orange); --glow-purple: 0 0 5px var(--purple), 0 0 12px var(--purple); --sidebar-width: 280px;
+        }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: 'Press Start 2P', cursive; background-color: var(--black); color: var(--orange); text-shadow: 1px 1px 2px var(--black); overflow-x: hidden; background-image: radial-gradient(circle, #111 0%, var(--black) 90%); }
+        body::after { content: ""; position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background: repeating-linear-gradient(0deg, rgba(0,0,0,0.4) 0, rgba(0,0,0,0.4) 1px, transparent 1px, transparent 2px); pointer-events: none; z-index: 1000; }
+        .sidebar { position: fixed; top: 0; left: 0; width: var(--sidebar-width); height: 100%; background: var(--sidebar-bg); border-right: 3px solid var(--purple); box-shadow: var(--glow-purple); z-index: 200; transform: translateX(-100%); transition: transform 0.3s ease-in-out; display: flex; flex-direction: column; padding: 20px; font-size: 0.9rem; }
+        .sidebar.active { transform: translateX(0); }
+        .nav-link { display: block; color: var(--orange); text-decoration: none; padding: 12px 10px; margin-bottom: 5px; transition: all 0.2s; }
+        .nav-link:hover, .nav-link.active { background: var(--orange); color: var(--black); text-shadow: none; box-shadow: var(--glow-orange); }
+        .sidebar-toggle { position: fixed; top: 15px; left: 15px; width: 50px; height: 50px; background: var(--section-bg); border: 2px solid var(--orange); z-index: 201; cursor: pointer; display: flex; flex-direction: column; justify-content: space-around; padding: 10px; border-radius: 4px; }
+        .sidebar-toggle .bar { width: 100%; height: 3px; background: var(--orange); transition: all 0.3s ease-in-out; }
+        .sidebar-toggle.active .bar:nth-child(1) { transform: translateY(8px) rotate(45deg); }
+        .sidebar-toggle.active .bar:nth-child(2) { opacity: 0; }
+        .sidebar-toggle.active .bar:nth-child(3) { transform: translateY(-8px) rotate(-45deg); }
+        .overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.7); z-index: 199; opacity: 0; pointer-events: none; transition: opacity 0.3s ease-in-out; }
+        .overlay.active { opacity: 1; pointer-events: all; }
+        .main-content { transition: margin-left 0.3s ease-in-out; }
+        .container { max-width: 1200px; margin: auto; padding: 40px 15px; }
+        h1 { text-align: center; margin-bottom: 40px; color: var(--orange); text-shadow: var(--glow-orange); animation: text-flicker 4s linear infinite; font-size: clamp(1.5rem, 4vw, 2.2rem); letter-spacing: 2px; }
+        footer { text-align: center; padding: 40px 20px; margin-top: 50px; color: var(--white); font-size: 0.8rem; opacity: 0.7; }
+        @media (min-width: 1024px) { .sidebar-toggle, .overlay { display: none; } .sidebar { transform: translateX(0); } .main-content { margin-left: var(--sidebar-width); } }
+        @keyframes text-flicker { 0%, 100% { opacity: 1; } 50% { opacity: 0.8; } }
+
+        /* --- LIVE TRADE SIMULATOR STYLES (Restored) --- */
+        .trade-container { border: 4px solid var(--purple); box-shadow: var(--glow-purple); padding: clamp(15px, 3vw, 30px); background: #101010; }
+        .trade-interface { display: flex; flex-direction: column; gap: 20px; }
+        .trade-side { padding: 15px; border: 2px solid #444; display: flex; flex-direction: column; background: var(--section-bg); }
+        .trade-side h3 { text-align: center; margin-bottom: 15px; font-size: 1.5rem; padding: 5px; border-bottom: 2px solid; }
+        #player1-side h3 { color: var(--orange); border-color: var(--orange); text-shadow: var(--glow-orange); }
+        #player2-side h3 { color: var(--win-green); border-color: var(--win-green); text-shadow: 0 0 8px var(--win-green); }
+        .total-value-display { text-align: center; font-size: clamp(1.2rem, 3vw, 1.5rem); margin-bottom: 20px; padding: 10px; background: #000; border: 2px solid var(--purple); }
+        .trade-controls { display: flex; flex-direction: column; gap: 10px; margin-bottom: 15px; }
+        .trade-controls input { width: 100%; padding: 12px; background: #111; color: var(--orange); border: 2px solid var(--orange); font-family: 'Press Start 2P', cursive; font-size: 0.8rem; }
+        .trade-controls button { padding: 12px; background: var(--orange); color: var(--black); text-shadow: none; border: none; font-family: 'Press Start 2P', cursive; cursor: pointer; transition: all 0.2s; }
+        .trade-controls button:hover { box-shadow: var(--glow-orange); }
+        .offer-box { flex-grow: 1; background-color: #080808; background-image: linear-gradient(rgba(157, 0, 255, 0.08) 1px, transparent 1px), linear-gradient(90deg, rgba(157, 0, 255, 0.08) 1px, transparent 1px); background-size: 20px 20px; border: 2px dashed var(--purple); padding: 10px; min-height: 250px; }
+        .offer-item { display: flex; justify-content: space-between; align-items: center; padding: 8px; background: rgba(0,0,0,0.6); margin-bottom: 8px; font-size: 0.8rem; border-left: 3px solid var(--orange); }
+        .offer-item button { background: var(--lose-red); color: var(--white); border: none; padding: 4px 8px; cursor: pointer; font-family: 'Press Start 2P', cursive; }
+        .trade-separator { display: none; }
+        .action-buttons { display: flex; flex-direction: column; gap: 15px; margin-top: 30px; }
+        .action-buttons button { display: block; width: 100%; padding: 20px; font-size: clamp(1rem, 3vw, 1.5rem); color: var(--white); border: 3px solid var(--white); cursor: pointer; transition: all 0.2s; font-family: 'Press Start 2P', cursive; }
+        #compare-button { background: var(--purple); animation: pulse 1.5s infinite; }
+        #compare-button:hover { box-shadow: var(--glow-purple); }
+        #save-image-button { background: var(--orange); }
+        #save-image-button:hover { box-shadow: var(--glow-orange); }
+        #result-display { margin-top: 30px; padding: 20px; text-align: center; font-size: 1.5rem; text-transform: uppercase; transform: scale(0); transition: transform 0.3s ease-in-out; }
+        #result-display.visible { transform: scale(1); }
+        .fair-trade { color: var(--white); background: #555; } .win { color: var(--black); background: var(--win-green); text-shadow: none; } .big-win { color: var(--black); background: var(--win-green); animation: text-flicker 1s infinite; text-shadow: none; } .lose { color: var(--white); background: var(--lose-red); } .big-lose { color: var(--white); background: var(--lose-red); animation: text-flicker 1s infinite; }
+        .custom-select-wrapper { position: relative; width: 100%; font-size: 0.8rem; }
+        .custom-select-trigger { width: 100%; padding: 12px; background: #111; color: var(--orange); border: 2px solid var(--orange); cursor: pointer; display: flex; justify-content: space-between; align-items: center; transition: box-shadow 0.2s; }
+        .custom-select-trigger:hover, .custom-select-wrapper.active .custom-select-trigger { box-shadow: var(--glow-orange); }
+        .custom-select-trigger::after { content: ''; width: 0; height: 0; border-left: 6px solid transparent; border-right: 6px solid transparent; border-top: 6px solid var(--orange); transition: transform 0.3s ease; }
+        .custom-select-wrapper.active .custom-select-trigger::after { transform: rotate(180deg); }
+        .custom-options { position: absolute; top: 100%; left: 0; right: 0; background: #111; border: 2px solid var(--orange); border-top: none; z-index: 100; max-height: 200px; overflow-y: auto; display: none; }
+        .custom-select-wrapper.active .custom-options { display: block; }
+        .custom-option { padding: 12px; cursor: pointer; }
+        .custom-option:hover { background: var(--orange); color: var(--black); text-shadow: none; }
+
+        /* --- TRADE RECEIPT STYLES (For Image Generation ONLY) --- */
+        #trade-receipt { display: none; position: absolute; left: -9999px; top: 0; width: 800px; padding: 25px; background: #181818; color: var(--white); font-family: 'Press Start 2P', cursive; border: 5px solid var(--purple); overflow: hidden; }
+        .receipt-filter { position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: linear-gradient(to top right, rgba(157, 0, 255, 0.1), rgba(255, 127, 0, 0.1)); pointer-events: none; }
+        .receipt-logo { position: absolute; top: 15px; right: 15px; width: 60px; opacity: 0.3; }
+        .receipt-title { text-align: center; font-size: 2rem; color: var(--orange); text-shadow: 0 0 8px var(--orange); margin-bottom: 40px; }
+        .receipt-body { display: flex; justify-content: space-between; gap: 20px; }
+        .receipt-side { width: 48%; font-size: 1rem; }
+        .receipt-side h3 { font-size: 1.2rem; padding-bottom: 8px; margin-bottom: 15px; border-bottom: 2px solid; }
+        .receipt-side-my h3 { color: var(--orange); border-color: var(--orange); }
+        .receipt-side-your h3 { color: var(--win-green); border-color: var(--win-green); }
+        .receipt-items { list-style: none; min-height: 150px; line-height: 2; color: #ddd; }
+        .receipt-total { font-size: 1.1rem; text-align: center; margin-top: 20px; padding: 12px; background: #000; border: 2px solid #fff; }
+        .receipt-footer { text-align: center; margin-top: 30px; font-size: 1.2rem; }
+
+        @media (min-width: 900px) { .trade-interface { flex-direction: row; align-items: stretch; } .trade-side { width: 45%; } .trade-separator { display: flex; align-items: center; justify-content: center; font-size: 3rem; color: var(--purple); text-shadow: var(--glow-purple); } #result-display { font-size: 2rem; } .action-buttons { flex-direction: row; } }
+        @keyframes pulse { 0%, 100% { transform: scale(1); } 50% { transform: scale(1.05); } }
+    </style>
+</head>
+<body>
+    <div class="overlay" id="overlay"></div>
+    <button class="sidebar-toggle" id="sidebar-toggle"><div class="bar"></div><div class="bar"></div><div class="bar"></div></button>
+    <nav class="sidebar" id="sidebar">
+        <a href="/Wild-Studios-wiki/index.html" class="nav-link">Main Menu</a>
+        <a href="/Wild-Studios-wiki/value-list.html" class="nav-link">Value List</a>
+        <a href="/Wild-Studios-wiki/pages/trade-simulator.html" class="nav-link">Trade Simulator</a>
+    </nav>
+
+    <main class="main-content">
+        <div class="container">
+            <h1>Trade Simulator</h1>
+            <div class="trade-container">
+                <div class="trade-interface">
+                    <div class="trade-side" id="player1-side">
+                        <h3>PLAYER 1</h3>
+                        <div class="total-value-display" id="player1-total-value">0 DNA</div>
+                        <div class="trade-controls">
+                            <div class="custom-select-wrapper" id="player1-item-select-wrapper"><div class="custom-select-trigger"><span>--- Select Item ---</span></div><div class="custom-options"></div></div>
+                            <button id="add-player1-item">Add Selected Item</button>
+                            <input type="number" id="player1-dna-input" min="0" placeholder="Enter DNA amount">
+                        </div>
+                        <div class="offer-box" id="player1-offer-box"></div>
+                    </div>
+                    <div class="trade-separator">VS</div>
+                    <div class="trade-side" id="player2-side">
+                        <h3>PLAYER 2</h3>
+                        <div class="total-value-display" id="player2-total-value">0 DNA</div>
+                        <div class="trade-controls">
+                            <div class="custom-select-wrapper" id="player2-item-select-wrapper"><div class="custom-select-trigger"><span>--- Select Item ---</span></div><div class="custom-options"></div></div>
+                            <button id="add-player2-item">Add Selected Item</button>
+                            <input type="number" id="player2-dna-input" min="0" placeholder="Enter DNA amount">
+                        </div>
+                        <div class="offer-box" id="player2-offer-box"></div>
+                    </div>
+                </div>
+                <div class="action-buttons">
+                    <button id="compare-button">ANALYZE</button>
+                    <button id="save-image-button">SAVE AS IMAGE</button>
+                </div>
+                <div id="result-display"></div>
+            </div>
+        </div>
+    </main>
+    
+    <div id="trade-receipt">
+        <div class="receipt-filter"></div>
+        <img src="/Wild-Studios-wiki/images/WSL.png" class="receipt-logo" alt="Logo">
+        <h2 class="receipt-title">TRADE OFFER</h2>
+        <div class="receipt-body">
+            <div class="receipt-side receipt-side-my">
+                <h3>MY OFFER</h3>
+                <ul class="receipt-items" id="receipt-my-items"></ul>
+                <div class="receipt-total" id="receipt-my-total"></div>
+            </div>
+            <div class="receipt-side receipt-side-your">
+                <h3>YOUR OFFER</h3>
+                <ul class="receipt-items" id="receipt-your-items"></ul>
+                <div class="receipt-total" id="receipt-your-total"></div>
+            </div>
+        </div>
+        <div class="receipt-footer" id="receipt-result"></div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const sidebar = document.getElementById('sidebar');
+            const toggleBtn = document.getElementById('sidebar-toggle');
+            const overlay = document.getElementById('overlay');
+            toggleBtn.addEventListener('click', () => { sidebar.classList.toggle('active'); toggleBtn.classList.toggle('active'); overlay.classList.toggle('active'); });
+            overlay.addEventListener('click', () => { sidebar.classList.remove('active'); toggleBtn.classList.remove('active'); overlay.classList.remove('active'); });
+            const currentPage = "/Wild-Studios-wiki" + window.location.pathname.substring(window.location.pathname.lastIndexOf('/'));
+            document.querySelectorAll('.sidebar .nav-link').forEach(link => { if (link.getAttribute('href') === currentPage) { link.classList.add('active'); } });
+
+            const tradeValues = { "PBC": 170000, "Movie Brachio": 111000, "Movie Mosa": 90000, "Suited Capy": 90000, "Movie Spino": 80000, "Indor Bone": 76000, "Movie Rex": 73000, "Carnage Cerato": 70000, "Movie Trike": 69000, "Indom Bone": 67000 };
+            let player1Offer = {}; let player2Offer = {}; let lastResult = { text: "ANALYSIS PENDING", color: "var(--white)" };
+            
+            function createCustomSelect(wrapperId) {
+                const wrapper = document.getElementById(wrapperId);
+                const trigger = wrapper.querySelector('.custom-select-trigger');
+                const optionsContainer = wrapper.querySelector('.custom-options');
+                let selectedValue = "";
+                Object.keys(tradeValues).forEach(item => {
+                    const option = document.createElement('div');
+                    option.className = 'custom-option';
+                    option.textContent = `${item} (${tradeValues[item].toLocaleString()} DNA)`;
+                    option.addEventListener('click', () => {
+                        selectedValue = item;
+                        trigger.querySelector('span').textContent = item;
+                        wrapper.classList.remove('active');
+                    });
+                    optionsContainer.appendChild(option);
+                });
+                trigger.addEventListener('click', () => wrapper.classList.toggle('active'));
+                return { getValue: () => selectedValue };
+            }
+
+            const player1Select = createCustomSelect('player1-item-select-wrapper');
+            const player2Select = createCustomSelect('player2-item-select-wrapper');
+
+            function setupSide(player, offerObj, customSelect) {
+                document.getElementById(`add-${player}-item`).addEventListener('click', () => addItem(offerObj, customSelect.getValue()));
+                document.getElementById(`${player}-dna-input`).addEventListener('keypress', e => { if (e.key === 'Enter') addDna(player, offerObj); });
+            }
+
+            function addItem(offerObj, selectedItem) { if (selectedItem) { offerObj[selectedItem] = (offerObj[selectedItem] || 0) + 1; updateUI(); } }
+            function addDna(player, offerObj) { const input = document.getElementById(`${player}-dna-input`); const dna = parseInt(input.value, 10); if (!isNaN(dna) && dna > 0) { offerObj['DNA'] = (offerObj['DNA'] || 0) + dna; input.value = ''; updateUI(); } }
+            function removeItem(offerObj, item) { if (item === 'DNA') delete offerObj['DNA']; else { offerObj[item]--; if (offerObj[item] <= 0) delete offerObj[item]; } updateUI(); }
+            function calculateTotal(offerObj) { return Object.keys(offerObj).reduce((sum, key) => sum + ((tradeValues[key] || 1) * offerObj[key]), 0); }
+            
+            function updateUI() {
+                updateOfferBox('player1', player1Offer);
+                updateOfferBox('player2', player2Offer);
+                document.getElementById('player1-total-value').textContent = `${calculateTotal(player1Offer).toLocaleString()} DNA`;
+                document.getElementById('player2-total-value').textContent = `${calculateTotal(player2Offer).toLocaleString()} DNA`;
+            }
+
+            function updateOfferBox(player, offerObj) {
+                const box = document.getElementById(`${player}-offer-box`);
+                box.innerHTML = '';
+                Object.keys(offerObj).sort().forEach(item => {
+                    const div = document.createElement('div');
+                    div.className = 'offer-item';
+                    div.innerHTML = `<span>${offerObj[item].toLocaleString()}x ${item}</span><button>X</button>`;
+                    div.querySelector('button').addEventListener('click', () => removeItem(offerObj, item));
+                    box.appendChild(div);
+                });
+            }
+            
+            document.getElementById('compare-button').addEventListener('click', () => {
+                const p1Total = calculateTotal(player1Offer);
+                const p2Total = calculateTotal(player2Offer);
+                const difference = p2Total - p1Total;
+                const resultDisplay = document.getElementById('result-display');
+                if (p1Total === 0 && p2Total === 0) { lastResult = { text: "ANALYSIS PENDING", color: "var(--white)" }; return; }
+                const percentageDiff = p1Total > 0 ? Math.abs(difference) / p1Total : 1;
+                let text, className, color;
+                if (percentageDiff < 0.05) { text = "Fair Trade!"; className = 'fair-trade'; color = "var(--white)"; }
+                else if (difference > 0) { text = `Win! (+${difference.toLocaleString()} DNA)`; className = percentageDiff > 0.25 ? 'big-win' : 'win'; color = "var(--win-green)"; }
+                else { text = `Lose! (${difference.toLocaleString()} DNA)`; className = percentageDiff > 0.25 ? 'big-lose' : 'lose'; color = "var(--lose-red)"; }
+                resultDisplay.textContent = text; resultDisplay.className = className; resultDisplay.classList.add('visible');
+                lastResult = { text: `Result: ${text.split('(')[0].trim()}`, color: color };
+            });
+
+            document.getElementById('save-image-button').addEventListener('click', () => {
+                const receipt = document.getElementById('trade-receipt');
+                const myTotal = calculateTotal(player1Offer);
+                const yourTotal = calculateTotal(player2Offer);
+                
+                document.getElementById('receipt-my-total').textContent = `Total: ${myTotal.toLocaleString()} DNA`;
+                document.getElementById('receipt-your-total').textContent = `Total: ${yourTotal.toLocaleString()} DNA`;
+                
+                const myItemsUl = document.getElementById('receipt-my-items');
+                myItemsUl.innerHTML = '';
+                Object.keys(player1Offer).sort().forEach(item => { myItemsUl.innerHTML += `<li>${player1Offer[item].toLocaleString()}x ${item}</li>`; });
+                
+                const yourItemsUl = document.getElementById('receipt-your-items');
+                yourItemsUl.innerHTML = '';
+                Object.keys(player2Offer).sort().forEach(item => { yourItemsUl.innerHTML += `<li>${player2Offer[item].toLocaleString()}x ${item}</li>`; });
+
+                const resultEl = document.getElementById('receipt-result');
+                resultEl.textContent = lastResult.text;
+                resultEl.style.color = lastResult.color;
+
+                receipt.style.display = 'block';
+                html2canvas(receipt, { backgroundColor: '#181818' }).then(canvas => {
+                    const link = document.createElement('a');
+                    link.download = 'wild-era-trade.png';
+                    link.href = canvas.toDataURL();
+                    link.click();
+                    receipt.style.display = 'none';
+                });
+            });
+
+            setupSide('player1', player1Offer, player1Select);
+            setupSide('player2', player2Offer, player2Select);
+        });
+    </script>
+</body>
+</html>
