@@ -9,30 +9,18 @@
     <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
     <style>
         :root {
-            --orange: #ff7f00;
-            --purple: #9d00ff;
-            --black: #000000;
-            --section-bg: #1A1A1A;
-            --sidebar-bg: #101010;
-            --white: #FFFFFF;
-            --glow-orange: 0 0 3px var(--orange), 0 0 8px var(--orange);
-            --glow-purple: 0 0 5px var(--purple), 0 0 12px var(--purple);
-            --sidebar-width: 280px;
-            --price-high: #00ff88;
-            --price-mid-high: #00d4ff;
-            --price-mid: #ffaa00;
-            --price-low: #ff5555;
+            --orange: #ff7f00; --purple: #9d00ff; --black: #000000; --section-bg: #1A1A1A; --sidebar-bg: #101010; --white: #FFFFFF;
+            --glow-orange: 0 0 3px var(--orange), 0 0 8px var(--orange); --glow-purple: 0 0 5px var(--purple), 0 0 12px var(--purple); --sidebar-width: 280px;
+            --price-high: #00ff88; --price-mid-high: #00d4ff; --price-mid: #ffaa00; --price-low: #ff5555;
         }
         * { margin: 0; padding: 0; box-sizing: border-box; }
         body { font-family: 'Press Start 2P', cursive; background-color: var(--black); color: var(--orange); text-shadow: 1px 1px 2px var(--black); overflow-x: hidden; background-image: radial-gradient(circle, #111 0%, var(--black) 90%); }
         body::after { content: ""; position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background: repeating-linear-gradient(0deg, rgba(0,0,0,0.4) 0, rgba(0,0,0,0.4) 1px, transparent 1px, transparent 2px); pointer-events: none; z-index: 1000; }
-        .sidebar { position: fixed; top: 0; left: 0; width: var(--sidebar-width); height: 100%; background: var(--sidebar-bg); border-right: 3px solid var(--purple); box-shadow: var(--glow-purple); z-index: 200; transform: translateX(-100%); transition: transform 0.3s ease-in-out; display: flex; flex-direction: column; padding: 20px; font-size: 0.9rem; overflow-y: auto; }
+        
+        /* --- Simplified Sidebar --- */
+        .sidebar { position: fixed; top: 0; left: 0; width: var(--sidebar-width); height: 100%; background: var(--sidebar-bg); border-right: 3px solid var(--purple); box-shadow: var(--glow-purple); z-index: 200; transform: translateX(-100%); transition: transform 0.3s ease-in-out; display: flex; flex-direction: column; padding: 20px; font-size: 0.9rem; }
         .sidebar.active { transform: translateX(0); }
-        .sidebar-logo { text-align: center; margin-bottom: 30px; }
-        .sidebar-logo img { max-width: 150px; border: 2px solid var(--orange); border-radius: 5px; box-shadow: var(--glow-orange); }
-        .nav-section { margin-bottom: 30px; }
-        .nav-section-title { color: var(--white); margin-bottom: 15px; font-size: 1rem; border-bottom: 1px dashed var(--purple); padding-bottom: 5px; }
-        .nav-link { display: block; color: var(--orange); text-decoration: none; padding: 12px 10px; margin-bottom: 5px; transition: all 0.2s; }
+        .nav-link { display: block; color: var(--orange); text-decoration: none; padding: 12px 10px; margin-bottom: 5px; transition: all 0.2s; font-size: 1rem; }
         .nav-link:hover, .nav-link.active { background: var(--orange); color: var(--black); text-shadow: none; box-shadow: var(--glow-orange); }
         .sidebar-toggle { position: fixed; top: 15px; left: 15px; width: 50px; height: 50px; background: var(--section-bg); border: 2px solid var(--orange); z-index: 201; cursor: pointer; display: flex; flex-direction: column; justify-content: space-around; padding: 10px; border-radius: 4px; }
         .sidebar-toggle .bar { width: 100%; height: 3px; background: var(--orange); transition: all 0.3s ease-in-out; }
@@ -47,68 +35,32 @@
         h2 { text-align: center; margin-bottom: 30px; color: var(--white); font-size: clamp(1rem, 3vw, 1.6rem); margin-top: 0; padding-top: 60px; line-height: 1.5; }
         h2::before, h2::after { content: " -= "; color: var(--purple); }
         footer { text-align: center; padding: 40px 20px; margin-top: 80px; color: var(--white); font-size: clamp(0.6rem, 2vw, 0.8rem); opacity: 0.7; line-height: 1.6; }
+        
+        /* --- Value List Styles --- */
         .value-tier { margin-bottom: 80px; padding: 30px; background: rgba(26, 26, 26, 0.5); border: 2px solid #2a2a2a; border-radius: 8px; }
         .item-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(min(200px, 100%), 1fr)); gap: 25px; margin-bottom: 30px; }
-        .item-card { background: var(--section-bg); border: 3px solid #333; padding: 20px; text-align: center; transition: transform 0.2s, border-color 0.2s, box-shadow 0.2s; border-radius: 6px; position: relative; overflow: hidden; }
-        .item-card::before { content: ''; position: absolute; top: -50%; left: -50%; width: 200%; height: 200%; background: conic-gradient(transparent, rgba(157, 0, 255, 0.2), transparent 30%); animation: rotate 4s linear infinite; opacity: 0; transition: opacity 0.3s; }
+        .item-card { background: var(--section-bg); border: 3px solid #333; padding: 20px; text-align: center; transition: transform 0.2s, border-color 0.2s, box-shadow 0.2s; border-radius: 6px; }
         .item-card:hover { transform: translateY(-5px); border-color: var(--orange); box-shadow: 0 5px 20px rgba(255, 127, 0, 0.3); }
-        .item-card:hover::before { opacity: 1; }
-        .item-card img { max-width: 100%; height: auto; max-height: 120px; object-fit: contain; margin-bottom: 15px; position: relative; z-index: 2; }
-        .item-card .name { font-size: clamp(0.7rem, 2vw, 0.9rem); margin-bottom: 10px; color: var(--white); line-height: 1.4; word-wrap: break-word; position: relative; z-index: 2; }
-        .item-card .value { font-size: clamp(0.65rem, 2vw, 0.85rem); font-weight: bold; padding: 8px; border-radius: 4px; margin-top: 5px; line-height: 1.4; position: relative; z-index: 2; }
+        .item-card img { max-width: 100%; height: auto; max-height: 120px; object-fit: contain; margin-bottom: 15px; }
+        .item-card .name { font-size: clamp(0.7rem, 2vw, 0.9rem); margin-bottom: 10px; color: var(--white); line-height: 1.4; word-wrap: break-word; }
+        .item-card .value { font-size: clamp(0.65rem, 2vw, 0.85rem); font-weight: bold; padding: 8px; border-radius: 4px; margin-top: 5px; line-height: 1.4; }
         .value-high { color: var(--price-high); text-shadow: 0 0 8px var(--price-high); background: rgba(0, 255, 136, 0.1); }
         .value-mid-high { color: var(--price-mid-high); text-shadow: 0 0 8px var(--price-mid-high); background: rgba(0, 212, 255, 0.1); }
         .value-mid { color: var(--price-mid); text-shadow: 0 0 8px var(--price-mid); background: rgba(255, 170, 0, 0.1); }
         .value-low { color: var(--price-low); text-shadow: 0 0 8px var(--price-low); background: rgba(255, 85, 85, 0.1); }
         .untradeable-note { text-align: center; font-size: clamp(0.7rem, 2vw, 0.9rem); color: var(--white); opacity: 0.8; padding: 25px; background: var(--section-bg); border: 2px dashed var(--purple); margin-top: 60px; border-radius: 6px; line-height: 1.6; }
-        @media (min-width: 1024px) { 
-            .sidebar-toggle, .overlay { display: none; } 
-            .sidebar { transform: translateX(0); } 
-            .main-content { margin-left: var(--sidebar-width); }
-            .container { padding: 40px; }
-        }
-        @media (max-width: 768px) {
-            .sidebar { width: 85vw; max-width: 320px; font-size: 0.75rem; }
-            .sidebar-logo img { max-width: 120px; }
-            .nav-link { padding: 15px 10px; font-size: 0.75rem; }
-            .value-tier { padding: 20px 15px; margin-bottom: 60px; }
-            .item-grid { gap: 20px; }
-            .item-card { padding: 15px; }
-        }
-        @media (max-width: 480px) {
-            .container { padding: 70px 10px 30px; }
-            .value-tier { padding: 15px 10px; }
-            .item-grid { grid-template-columns: repeat(auto-fill, minmax(min(150px, 100%), 1fr)); gap: 15px; }
-        }
+        
+        @media (min-width: 1024px) { .sidebar-toggle, .overlay { display: none; } .sidebar { transform: translateX(0); } .main-content { margin-left: var(--sidebar-width); } .container { padding: 40px; } }
         @keyframes text-flicker { 0%, 100% { opacity: 1; } 50% { opacity: 0.8; } }
-        @keyframes rotate { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
     </style>
 </head>
 <body>
     <div class="overlay" id="overlay"></div>
-    <button class="sidebar-toggle" id="sidebar-toggle" aria-controls="sidebar" aria-expanded="false">
-        <div class="bar"></div><div class="bar"></div><div class="bar"></div>
-    </button>
+    <button class="sidebar-toggle" id="sidebar-toggle"><div class="bar"></div><div class="bar"></div><div class="bar"></div></button>
     <nav class="sidebar" id="sidebar">
-        <div class="sidebar-logo"><img src="/Wild-Studios-wiki/images/WSL.png" alt="Wiki Logo"></div>
-        <div class="nav-section">
-            <div class="nav-section-title">Main Pages</div>
-            <a href="/Wild-Studios-wiki/index.html" class="nav-link">Home</a>
-            <a href="/Wild-Studios-wiki/value-list.html" class="nav-link">Value List</a>
-            <a href="/Wild-Studios-wiki/pages/trade-simulator.html" class="nav-link">Trade Simulator</a>
-            <a href="/Wild-Studios-wiki/mechanics.html" class="nav-link">Game Mechanics</a>
-            <a href="/Wild-Studios-wiki/skins.html" class="nav-link">Skins</a>
-            <a href="/Wild-Studios-wiki/creatures.html" class="nav-link">Creatures</a>
-        </div>
-        <div class="nav-section">
-            <div class="nav-section-title">Community</div>
-            <a href="https://discord.gg/5hKfJRFGf4" target="_blank" class="nav-link">Discord</a>
-            <a href="https://www.roblox.com/groups/12020792/Wild-Studios#!/about" target="_blank" class="nav-link">Roblox Group</a>
-        </div>
-        <div class="nav-section" style="margin-top: auto;">
-             <div class="nav-section-title">Settings</div>
-             <div class="nav-link" style="cursor: not-allowed; opacity: 0.5;">Switch Theme</div>
-        </div>
+        <a href="/Wild-Studios-wiki/index.html" class="nav-link">Main Menu</a>
+        <a href="/Wild-Studios-wiki/value-list.html" class="nav-link">Value List</a>
+        <a href="/Wild-Studios-wiki/pages/trade-simulator.html" class="nav-link">Trade Simulator</a>
     </nav>
     <main class="main-content">
         <div class="container">
@@ -164,22 +116,10 @@
             const sidebar = document.getElementById('sidebar');
             const toggleBtn = document.getElementById('sidebar-toggle');
             const overlay = document.getElementById('overlay');
-            function toggleSidebar() {
-                const isActive = sidebar.classList.toggle('active');
-                toggleBtn.classList.toggle('active');
-                overlay.classList.toggle('active');
-                toggleBtn.setAttribute('aria-expanded', isActive);
-            }
-            toggleBtn.addEventListener('click', toggleSidebar);
-            overlay.addEventListener('click', toggleSidebar);
-            const currentPage = window.location.pathname;
-            const navLinks = document.querySelectorAll('.sidebar .nav-link');
-            navLinks.forEach(link => {
-                const linkHref = link.getAttribute('href'); 
-                if (linkHref === currentPage) {
-                    link.classList.add('active');
-                }
-            });
+            toggleBtn.addEventListener('click', () => { sidebar.classList.toggle('active'); toggleBtn.classList.toggle('active'); overlay.classList.toggle('active'); });
+            overlay.addEventListener('click', () => { sidebar.classList.remove('active'); toggleBtn.classList.remove('active'); overlay.classList.remove('active'); });
+            const currentPage = "/Wild-Studios-wiki" + window.location.pathname.substring(window.location.pathname.lastIndexOf('/'));
+            document.querySelectorAll('.sidebar .nav-link').forEach(link => { if (link.getAttribute('href') === currentPage) { link.classList.add('active'); } });
         });
     </script>
 </body>
