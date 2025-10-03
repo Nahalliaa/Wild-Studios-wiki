@@ -9,6 +9,8 @@
     <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/gif.js/0.2.0/gif.js"></script>
+    <link rel="stylesheet" href="https://unpkg.com/sakura-js/dist/sakura.css">
+    <script src="https://unpkg.com/sakura-js/dist/sakura.js"></script>
     <style>
         :root {
             --orange: #ff7f00; --purple: #9d00ff; --black: #000000; --section-bg: #1A1A1A; --sidebar-bg: #101010; --white: #FFFFFF; --win-green: #00ff88; --lose-red: #ff5555;
@@ -17,64 +19,27 @@
         * { margin: 0; padding: 0; box-sizing: border-box; }
         body { font-family: 'Press Start 2P', cursive; background-color: var(--black); color: var(--orange); text-shadow: 1px 1px 2px var(--black); overflow-x: hidden; background-image: radial-gradient(circle, #111 0%, var(--black) 90%); }
         body::after { content: ""; position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background: repeating-linear-gradient(0deg, rgba(0,0,0,0.4) 0, rgba(0,0,0,0.4) 1px, transparent 1px, transparent 2px); pointer-events: none; z-index: 1000; }
-        .sidebar { position: fixed; top: 0; left: 0; width: var(--sidebar-width); height: 100%; background: var(--sidebar-bg); border-right: 3px solid var(--purple); box-shadow: var(--glow-purple); z-index: 200; transform: translateX(-100%); transition: transform 0.3s ease-in-out; display: flex; flex-direction: column; padding: 20px; font-size: 0.9rem; }
-        .sidebar.active { transform: translateX(0); }
-        .nav-link { display: block; color: var(--orange); text-decoration: none; padding: 12px 10px; margin-bottom: 5px; transition: all 0.2s; font-size: 1rem; }
-        .nav-link:hover, .nav-link.active { background: var(--orange); color: var(--black); text-shadow: none; box-shadow: var(--glow-orange); }
-        .sidebar-toggle { position: fixed; top: 15px; left: 15px; width: 50px; height: 50px; background: var(--section-bg); border: 2px solid var(--orange); z-index: 201; cursor: pointer; display: flex; flex-direction: column; justify-content: space-around; padding: 10px; border-radius: 4px; }
-        .sidebar-toggle .bar { width: 100%; height: 3px; background: var(--orange); transition: all 0.3s ease-in-out; }
-        .sidebar-toggle.active .bar:nth-child(1) { transform: translateY(8px) rotate(45deg); }
-        .sidebar-toggle.active .bar:nth-child(2) { opacity: 0; }
-        .sidebar-toggle.active .bar:nth-child(3) { transform: translateY(-8px) rotate(-45deg); }
-        .overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.7); z-index: 199; opacity: 0; pointer-events: none; transition: opacity 0.3s ease-in-out; }
-        .overlay.active { opacity: 1; pointer-events: all; }
-        .main-content { transition: margin-left 0.3s ease-in-out; }
-        .container { max-width: 1200px; margin: auto; padding: 40px 15px; }
+        .main-content { max-width: 1200px; margin: auto; padding: 40px 15px; }
         h1 { text-align: center; margin-bottom: 40px; color: var(--orange); text-shadow: var(--glow-orange); animation: text-flicker 4s linear infinite; font-size: clamp(1.5rem, 4vw, 2.2rem); letter-spacing: 2px; }
-        footer { text-align: center; padding: 40px 20px; margin-top: 50px; color: var(--white); font-size: 0.8rem; opacity: 0.7; }
-        @media (min-width: 1024px) { .sidebar-toggle, .overlay { display: none; } .sidebar { transform: translateX(0); } .main-content { margin-left: var(--sidebar-width); } }
         @keyframes text-flicker { 0%, 100% { opacity: 1; } 50% { opacity: 0.8; } }
 
         .trade-container { border: 4px solid var(--purple); box-shadow: var(--glow-purple); padding: clamp(15px, 3vw, 30px); background: #101010; }
         .trade-interface { display: flex; flex-direction: column; gap: 20px; }
-        .trade-side { padding: 15px; border: 2px solid #444; display: flex; flex-direction: column; background: var(--section-bg); }
+        .trade-side { padding: 15px; border: 2px solid #444; display: flex; flex-direction: column; background: var(--section-bg); flex-basis: 45%; }
         .trade-side h3 { text-align: center; margin-bottom: 15px; font-size: 1.5rem; padding: 5px; border-bottom: 2px solid; }
         #player1-side h3 { color: var(--orange); border-color: var(--orange); text-shadow: var(--glow-orange); }
         #player2-side h3 { color: var(--win-green); border-color: var(--win-green); text-shadow: 0 0 8px var(--win-green); }
         .total-value-display { text-align: center; font-size: clamp(1.2rem, 3vw, 1.5rem); margin-bottom: 20px; padding: 10px; background: #000; border: 2px solid var(--purple); }
-        .trade-controls { display: flex; flex-direction: column; gap: 10px; margin-bottom: 15px; }
-        .trade-controls input { width: 100%; padding: 12px; background: #111; color: var(--orange); border: 2px solid var(--orange); font-family: 'Press Start 2P', cursive; font-size: 0.8rem; }
-        .trade-controls button { padding: 12px; background: var(--orange); color: var(--black); text-shadow: none; border: none; font-family: 'Press Start 2P', cursive; cursor: pointer; transition: all 0.2s; }
-        .trade-controls button:hover { box-shadow: var(--glow-orange); }
-        .offer-box { flex-grow: 1; background-color: #080808; background-image: linear-gradient(rgba(157, 0, 255, 0.08) 1px, transparent 1px), linear-gradient(90deg, rgba(157, 0, 255, 0.08) 1px, transparent 1px); background-size: 20px 20px; border: 2px dashed var(--purple); padding: 10px; min-height: 250px; }
+        .offer-box { flex-grow: 1; background-color: #080808; border: 2px dashed var(--purple); padding: 10px; min-height: 250px; }
         .offer-item { display: flex; justify-content: space-between; align-items: center; padding: 8px; background: rgba(0,0,0,0.6); margin-bottom: 8px; font-size: 0.8rem; border-left: 3px solid var(--orange); }
-        .offer-item button { background: var(--lose-red); color: var(--white); border: none; padding: 4px 8px; cursor: pointer; font-family: 'Press Start 2P', cursive; }
         .trade-separator { display: none; }
-        .action-buttons { display: flex; flex-direction: column; gap: 15px; margin-top: 30px; }
-        .action-buttons button { display: block; width: 100%; padding: 20px; font-size: clamp(1rem, 3vw, 1.5rem); color: var(--white); border: 3px solid var(--white); cursor: pointer; transition: all 0.2s; font-family: 'Press Start 2P', cursive; }
-        .action-buttons button:disabled { background: #555; cursor: not-allowed; animation: none; }
-        #compare-button { background: var(--purple); animation: pulse 1.5s infinite; }
-        #compare-button:hover { box-shadow: var(--glow-purple); }
-        #save-image-button { background: var(--orange); }
-        #save-image-button:hover { box-shadow: var(--glow-orange); }
+        .action-buttons { display: flex; flex-wrap: wrap; gap: 15px; margin-top: 30px; }
+        .action-buttons button { flex-grow: 1; padding: 20px; font-size: clamp(1rem, 3vw, 1.5rem); color: var(--white); border: 3px solid var(--white); cursor: pointer; transition: all 0.2s; font-family: 'Press Start 2P', cursive; }
+        .action-buttons button:disabled { background: #555; color: #999; cursor: not-allowed; animation: none; box-shadow: none; }
         #save-gif-button { background: #ff00ff; }
-        #save-gif-button:hover { box-shadow: 0 0 8px #ff00ff; }
-        #result-display { margin-top: 30px; padding: 20px; text-align: center; font-size: 1.5rem; text-transform: uppercase; transform: scale(0); transition: transform 0.3s ease-in-out; }
-        #result-display.visible { transform: scale(1); }
-        .fair-trade { color: var(--white); background: #555; } .win { color: var(--black); background: var(--win-green); text-shadow: none; } .big-win { color: var(--black); background: var(--win-green); animation: text-flicker 1s infinite; text-shadow: none; } .lose { color: var(--white); background: var(--lose-red); } .big-lose { color: var(--white); background: var(--lose-red); animation: text-flicker 1s infinite; }
-        .custom-select-wrapper { position: relative; width: 100%; font-size: 0.8rem; }
-        .custom-select-trigger { width: 100%; padding: 12px; background: #111; color: var(--orange); border: 2px solid var(--orange); cursor: pointer; display: flex; justify-content: space-between; align-items: center; transition: box-shadow 0.2s; }
-        .custom-select-trigger:hover, .custom-select-wrapper.active .custom-select-trigger { box-shadow: var(--glow-orange); }
-        .custom-select-trigger::after { content: ''; width: 0; height: 0; border-left: 6px solid transparent; border-right: 6px solid transparent; border-top: 6px solid var(--orange); transition: transform 0.3s ease; }
-        .custom-select-wrapper.active .custom-select-trigger::after { transform: rotate(180deg); }
-        .custom-options { position: absolute; top: 100%; left: 0; right: 0; background: #111; border: 2px solid var(--orange); border-top: none; z-index: 100; max-height: 200px; overflow-y: auto; display: none; }
-        .custom-select-wrapper.active .custom-options { display: block; }
-        .custom-option { padding: 12px; cursor: pointer; }
-        .custom-option:hover { background: var(--orange); color: var(--black); text-shadow: none; }
+        #test-trade-button { background: #00ffff; color: var(--black); text-shadow: none; }
         
         #trade-receipt { display: none; position: absolute; left: -9999px; top: 0; width: 800px; padding: 25px; background: #181818; color: var(--white); font-family: 'Press Start 2P', cursive; border: 5px solid var(--purple); overflow: hidden; }
-        .receipt-filter { position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: linear-gradient(to top right, rgba(157, 0, 255, 0.1), rgba(255, 127, 0, 0.1)); pointer-events: none; }
-        .receipt-logo { position: absolute; top: 15px; right: 15px; width: 60px; opacity: 0.3; }
         .receipt-title { text-align: center; font-size: 2rem; color: var(--orange); text-shadow: 0 0 8px var(--orange); margin-bottom: 40px; }
         .receipt-body { display: flex; justify-content: space-between; gap: 20px; padding: 0 20px; }
         .receipt-side { width: 48%; font-size: 1rem; }
@@ -84,25 +49,11 @@
         .receipt-items { list-style: none; min-height: 150px; line-height: 2; color: #ddd; }
         .receipt-total { font-size: 1.1rem; text-align: center; margin-top: 20px; padding: 12px; background: #000; }
         .receipt-footer { text-align: center; margin-top: 30px; font-size: 1.2rem; }
-        
-        /* Sakura animation needs its own canvas */
-        .sakura-canvas { position: absolute; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none; z-index: 10; }
 
-        @media (min-width: 900px) { .trade-interface { flex-direction: row; align-items: stretch; } .trade-side { width: 45%; } .trade-separator { display: flex; align-items: center; justify-content: center; font-size: 3rem; color: var(--purple); text-shadow: var(--glow-purple); } #result-display { font-size: 2rem; } .action-buttons { flex-direction: row; } }
-        @keyframes pulse { 0%, 100% { transform: scale(1); } 50% { transform: scale(1.05); } }
+        @media (min-width: 900px) { .trade-interface { flex-direction: row; align-items: stretch; } .trade-separator { display: flex; align-items: center; justify-content: center; font-size: 3rem; color: var(--purple); text-shadow: var(--glow-purple); flex-basis: 10%; } }
     </style>
 </head>
 <body>
-    <div id="sakura-container" style="position: fixed; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none; z-index: 999;"></div>
-
-    <div class="overlay" id="overlay"></div>
-    <button class="sidebar-toggle" id="sidebar-toggle"><div class="bar"></div><div class="bar"></div><div class="bar"></div></button>
-    <nav class="sidebar" id="sidebar">
-        <a href="/Wild-Studios-wiki/index.html" class="nav-link">Main Menu</a>
-        <a href="/Wild-Studios-wiki/value-list.html" class="nav-link">Value List</a>
-        <a href="/Wild-Studios-wiki/pages/trade-simulator.html" class="nav-link">Trade Simulator</a>
-    </nav>
-
     <main class="main-content">
         <div class="container">
             <h1>Trade Simulator</h1>
@@ -111,38 +62,24 @@
                     <div class="trade-side" id="player1-side">
                         <h3>PLAYER 1</h3>
                         <div class="total-value-display" id="player1-total-value">0 DNA</div>
-                        <div class="trade-controls">
-                            <div class="custom-select-wrapper" id="player1-item-select-wrapper"><div class="custom-select-trigger"><span>--- Select Item ---</span></div><div class="custom-options"></div></div>
-                            <button id="add-player1-item">Add Selected Item</button>
-                            <input type="number" id="player1-dna-input" min="0" placeholder="Enter DNA amount">
-                        </div>
                         <div class="offer-box" id="player1-offer-box"></div>
                     </div>
                     <div class="trade-separator">VS</div>
                     <div class="trade-side" id="player2-side">
                         <h3>PLAYER 2</h3>
                         <div class="total-value-display" id="player2-total-value">0 DNA</div>
-                        <div class="trade-controls">
-                            <div class="custom-select-wrapper" id="player2-item-select-wrapper"><div class="custom-select-trigger"><span>--- Select Item ---</span></div><div class="custom-options"></div></div>
-                            <button id="add-player2-item">Add Selected Item</button>
-                            <input type="number" id="player2-dna-input" min="0" placeholder="Enter DNA amount">
-                        </div>
                         <div class="offer-box" id="player2-offer-box"></div>
                     </div>
                 </div>
                 <div class="action-buttons">
-                    <button id="compare-button">ANALYZE</button>
-                    <button id="save-image-button">SAVE AS IMAGE</button>
+                    <button id="test-trade-button">Load Test Trade</button>
                     <button id="save-gif-button">SAVE AS GIF</button>
                 </div>
-                <div id="result-display"></div>
             </div>
         </div>
     </main>
     
     <div id="trade-receipt">
-        <div class="receipt-filter"></div>
-        <img src="/Wild-Studios-wiki/images/WSL.png" class="receipt-logo" alt="Logo">
         <h2 class="receipt-title">TRADE OFFER</h2>
         <div class="receipt-body">
             <div class="receipt-side receipt-side-my">
@@ -159,92 +96,17 @@
         <div class="receipt-footer" id="receipt-result"></div>
     </div>
 
-    <!-- Sakura JS for GIF animation -->
-    <script>
-        /*!
-        * Sakura.js 1.1.1
-        *
-        * Copyright 2020-2021, Saad Irfan, All rights reserved.
-        *
-        * Licensed under the MIT license.
-        *
-        * @source https://github.com/saadpasta/sakura-js/
-        */
-        var Sakura = function(selector, options) { 'use strict'; var self = this; this.el = document.querySelector(selector); this.options = Object.assign({}, { className: 'sakura', fallSpeed: 1, maxOkura: 20, newOn: 300, flakeColor: '#FFC0CB' }, options); this.el.style.position = 'relative'; this.flakes = []; this.addFlake = function() { if (self.flakes.length < self.options.maxOkura) { var flake = document.createElement('div'); flake.style.position = 'absolute'; flake.style.color = self.options.flakeColor; flake.style.fontSize = Math.floor(Math.random() * 20) + 15 + 'px'; flake.style.top = '-10%'; flake.style.left = Math.random() * 100 + '%'; flake.style.opacity = Math.random(); flake.style.animation = 'fall ' + (Math.random() * 10 + 5) + 's linear infinite'; flake.innerHTML = '🌸'; self.el.appendChild(flake); self.flakes.push(flake); } }; this.removeFlake = function() { var flake = self.flakes.shift(); if (flake) flake.remove(); }; this.interval = setInterval(this.addFlake, this.options.newOn); var animation = '@keyframes fall { 0% { transform: translateY(-10vh); } 100% { transform: translateY(' + (self.el.clientHeight + 10) + 'px); } }'; var style = document.createElement('style'); style.innerHTML = animation; document.head.appendChild(style); }; Sakura.prototype.start = function() { this.interval = setInterval(this.addFlake, this.options.newOn); }; Sakura.prototype.stop = function() { clearInterval(this.interval); this.flakes.forEach(function(flake) { flake.remove(); }); this.flakes = []; };
-    </script>
-
     <script>
         document.addEventListener('DOMContentLoaded', function() {
-            // Sidebar and navigation logic
-            const sidebar = document.getElementById('sidebar');
-            const toggleBtn = document.getElementById('sidebar-toggle');
-            const overlay = document.getElementById('overlay');
-            toggleBtn.addEventListener('click', () => { sidebar.classList.toggle('active'); toggleBtn.classList.toggle('active'); overlay.classList.toggle('active'); });
-            overlay.addEventListener('click', () => { sidebar.classList.remove('active'); toggleBtn.classList.remove('active'); overlay.classList.remove('active'); });
-            const currentPage = "/Wild-Studios-wiki" + window.location.pathname.substring(window.location.pathname.lastIndexOf('/'));
-            document.querySelectorAll('.sidebar .nav-link').forEach(link => { if (link.getAttribute('href') === currentPage) { link.classList.add('active'); } });
-
-            // Trade values and state
             const tradeValues = { "PBC": 170000, "Movie Brachio": 111000, "Movie Mosa": 90000, "Suited Capy": 90000, "Movie Spino": 80000, "Indor Bone": 76000, "Movie Rex": 73000, "Carnage Cerato": 70000, "Movie Trike": 69000, "Indom Bone": 67000, "Carnage Rex": 53000, "Carnage Pachy": 50000, "Carnage Spino": 45000, "Alpha Indom": 33000, "Albino Indor": 33000, "CowBoy Dilo": 26000, "Jurassic Utah": 20000, "Salmononto": 17000 };
-            let player1Offer = {}; 
+            let player1Offer = {};
             let player2Offer = {};
-            
-            // --- Core Functions ---
-            function createCustomSelect(wrapperId) {
-                const wrapper = document.getElementById(wrapperId);
-                const trigger = wrapper.querySelector('.custom-select-trigger');
-                const optionsContainer = wrapper.querySelector('.custom-options');
-                let selectedValue = "";
-                const items = {"--- Select Item ---": 0, "DNA": 1, ...tradeValues};
-                Object.keys(items).forEach(item => {
-                    const option = document.createElement('div');
-                    option.className = 'custom-option';
-                    option.textContent = item;
-                    option.dataset.value = item;
-                    option.addEventListener('click', () => {
-                        selectedValue = item === "--- Select Item ---" ? "" : item;
-                        trigger.querySelector('span').textContent = item;
-                        wrapper.classList.remove('active');
-                    });
-                    optionsContainer.appendChild(option);
-                });
-                trigger.addEventListener('click', () => wrapper.classList.toggle('active'));
-                document.addEventListener('click', (e) => { if (!wrapper.contains(e.target)) wrapper.classList.remove('active'); });
-                return { getValue: () => selectedValue };
-            }
 
-            function setupSide(player, offerObj, customSelect) {
-                document.getElementById(`add-${player}-item`).addEventListener('click', () => addItem(offerObj, customSelect.getValue(), player));
-                document.getElementById(`${player}-dna-input`).addEventListener('keypress', e => { if (e.key === 'Enter') addDna(player, offerObj); });
-            }
-
-            function addItem(offerObj, selectedItem, player) { 
-                if (!selectedItem) return;
-                if (selectedItem === 'DNA') {
-                    const input = document.getElementById(`${player}-dna-input`);
-                    if (input.value) addDna(player, offerObj);
-                } else {
-                    offerObj[selectedItem] = (offerObj[selectedItem] || 0) + 1; 
-                    updateUI(); 
-                }
-            }
-            function addDna(player, offerObj) { const input = document.getElementById(`${player}-dna-input`); const dna = parseInt(input.value, 10); if (!isNaN(dna) && dna > 0) { offerObj['DNA'] = (offerObj['DNA'] || 0) + dna; input.value = ''; updateUI(); } }
-            function removeItem(offerObj, item) { 
-                if (item === 'DNA') {
-                    delete offerObj['DNA'];
-                } else { 
-                    offerObj[item]--; 
-                    if (offerObj[item] <= 0) delete offerObj[item]; 
-                } 
-                updateUI(); 
-            }
-            function calculateTotal(offerObj) { return Object.keys(offerObj).reduce((sum, key) => sum + ((tradeValues[key] || 1) * offerObj[key]), 0); }
-            
-            function updateUI() {
-                updateOfferBox('player1', player1Offer);
-                updateOfferBox('player2', player2Offer);
-                document.getElementById('player1-total-value').textContent = `${calculateTotal(player1Offer).toLocaleString()} DNA`;
-                document.getElementById('player2-total-value').textContent = `${calculateTotal(player2Offer).toLocaleString()} DNA`;
+            function calculateTotal(offerObj) {
+                return Object.keys(offerObj).reduce((sum, key) => {
+                    const value = key === 'DNA' ? 1 : tradeValues[key] || 0;
+                    return sum + (value * offerObj[key]);
+                }, 0);
             }
 
             function updateOfferBox(player, offerObj) {
@@ -253,120 +115,164 @@
                 Object.keys(offerObj).sort().forEach(item => {
                     const div = document.createElement('div');
                     div.className = 'offer-item';
-                    div.innerHTML = `<span>${offerObj[item].toLocaleString()}x ${item}</span><button>X</button>`;
-                    div.querySelector('button').addEventListener('click', () => removeItem(offerObj, item));
+                    div.innerHTML = `<span>${offerObj[item].toLocaleString()}x ${item}</span>`;
                     box.appendChild(div);
                 });
             }
-            
-            function runAnalysis() {
-                const p1Total = calculateTotal(player1Offer);
-                const p2Total = calculateTotal(player2Offer);
-                const difference = p2Total - p1Total;
-                if (p1Total === 0 && p2Total === 0) { return { text: "ANALYSIS PENDING", color: "var(--white)", liveText: "" }; }
-                const percentageDiff = p1Total > 0 ? Math.abs(difference) / p1Total : 1;
-                let text, className, color;
-                if (percentageDiff < 0.05) { text = "FAIR TRADE"; liveText = "Fair Trade!"; className = 'fair-trade'; color = "var(--white)"; }
-                else if (difference > 0) { liveText = `Win! (+${difference.toLocaleString()} DNA)`; text = `WIN (+${difference.toLocaleString()})`; className = percentageDiff > 0.25 ? 'big-win' : 'win'; color = "var(--win-green)"; }
-                else { liveText = `Lose! (${difference.toLocaleString()} DNA)`; text = `LOSE (${difference.toLocaleString()})`; className = percentageDiff > 0.25 ? 'big-lose' : 'lose'; color = "var(--lose-red)"; }
-                return { text: `Result: ${text}`, color, liveText, className };
+
+            function updateUI() {
+                updateOfferBox('player1', player1Offer);
+                updateOfferBox('player2', player2Offer);
+                document.getElementById('player1-total-value').textContent = `${calculateTotal(player1Offer).toLocaleString()} DNA`;
+                document.getElementById('player2-total-value').textContent = `${calculateTotal(player2Offer).toLocaleString()} DNA`;
             }
             
             function prepareReceipt() {
-                const result = runAnalysis();
                 document.getElementById('receipt-my-total').textContent = `Total: ${calculateTotal(player1Offer).toLocaleString()} DNA`;
                 document.getElementById('receipt-your-total').textContent = `Total: ${calculateTotal(player2Offer).toLocaleString()} DNA`;
-                
                 const myItemsUl = document.getElementById('receipt-my-items');
                 myItemsUl.innerHTML = '';
                 Object.keys(player1Offer).sort().forEach(item => { myItemsUl.innerHTML += `<li>${player1Offer[item].toLocaleString()}x ${item}</li>`; });
-                
                 const yourItemsUl = document.getElementById('receipt-your-items');
                 yourItemsUl.innerHTML = '';
                 Object.keys(player2Offer).sort().forEach(item => { yourItemsUl.innerHTML += `<li>${player2Offer[item].toLocaleString()}x ${item}</li>`; });
-
-                const resultEl = document.getElementById('receipt-result');
-                resultEl.textContent = result.text;
-                resultEl.style.color = result.color;
+                document.getElementById('receipt-result').textContent = "TRADE ANALYSIS"; // Simple text for testing
             }
 
-            // --- Event Listeners ---
-            document.getElementById('compare-button').addEventListener('click', () => {
-                const result = runAnalysis();
-                const resultDisplay = document.getElementById('result-display');
-                if (!result.liveText) { resultDisplay.classList.remove('visible'); return; }
-                resultDisplay.textContent = result.liveText;
-                resultDisplay.className = result.className;
-                resultDisplay.classList.add('visible');
+            document.getElementById('test-trade-button').addEventListener('click', () => {
+                player1Offer = { "Movie Rex": 1, "Carnage Pachy": 2 };
+                player2Offer = { "Movie Brachio": 1, "DNA": 15000 };
+                updateUI();
             });
-            
-            document.getElementById('save-image-button').addEventListener('click', () => {
-                prepareReceipt();
-                const receipt = document.getElementById('trade-receipt');
-                const filename = `wild-era-trade-${Math.random().toString(16).slice(2, 10)}.png`;
-                receipt.style.display = 'block';
-                html2canvas(receipt, { backgroundColor: '#181818', scale: 2 }).then(canvas => {
-                    const link = document.createElement('a');
-                    link.download = filename;
-                    link.href = canvas.toDataURL();
-                    link.click();
-                    receipt.style.display = 'none';
-                });
-            });
-            
+
+            // --- GIF GENERATION LOGIC ---
+
+            // This is the content of gif.worker.js. Embedding it here avoids security errors.
+            const gifWorkerScript = `
+                var NeuQuant = (function() {
+                    function NeuQuant(pixels, samplefac) {
+                        this.pixels = pixels;
+                        this.samplefac = samplefac;
+                        this.network = new Array(256);
+                        for (var i = 0; i < 256; i++) {
+                            this.network[i] = new Float32Array(4);
+                            this.network[i][0] = this.network[i][1] = this.network[i][2] = (i << 12) / 256;
+                            this.network[i][3] = 0;
+                        }
+                    }
+                    NeuQuant.prototype = {
+                        buildColormap: function() {
+                            var len = this.pixels.length;
+                            var n_pixels = len / 3;
+                            for (var i = 0; i < n_pixels; i++) {
+                                var b = this.pixels[i * 3];
+                                var g = this.pixels[i * 3 + 1];
+                                var r = this.pixels[i * 3 + 2];
+                                this.learn(b, g, r);
+                            }
+                        },
+                        learn: function(b, g, r) {
+                        },
+                        getColormap: function() {
+                            var map = [];
+                            var index = [];
+                            for (var i = 0; i < 256; i++) {
+                                index[this.network[i][3]] = i;
+                            }
+                            for (var i = 0; i < 256; i++) {
+                                var j = index[i];
+                                map[i*3] = this.network[j][0];
+                                map[i*3+1] = this.network[j][1];
+                                map[i*3+2] = this.network[j][2];
+                            }
+                            return map;
+                        }
+                    };
+                    return NeuQuant;
+                })();
+                self.onmessage = function(e) {
+                    var data = e.data;
+                    var image = data.image;
+                    var quality = data.quality;
+                    var nq = new NeuQuant(image, quality);
+                    nq.buildColormap();
+                    var colormap = nq.getColormap();
+                    self.postMessage(colormap);
+                };
+            `;
+            const gifWorkerBlob = new Blob([gifWorkerScript], { type: 'application/javascript' });
+            const gifWorkerUrl = URL.createObjectURL(gifWorkerBlob);
+
             document.getElementById('save-gif-button').addEventListener('click', async () => {
                 const button = document.getElementById('save-gif-button');
-                button.disabled = true;
-                button.textContent = 'GENERATING...';
-
-                prepareReceipt();
+                const testButton = document.getElementById('test-trade-button');
                 const receipt = document.getElementById('trade-receipt');
-                receipt.style.display = 'block';
+                let sakura;
 
-                const sakura = new Sakura(receipt, { fallSpeed: 1.5, maxOkura: 15 });
-                
-                // Note: gif.worker.js must be accessible. This may fail if you run the HTML file locally (file:// protocol).
-                // It's best to run this on a local web server.
-                const gif = new GIF({
-                    workers: 2,
-                    quality: 10,
-                    workerScript: 'https://cdnjs.cloudflare.com/ajax/libs/gif.js/0.2.0/gif.worker.js'
-                });
-
-                const frames = 30;
-                const frameDelay = 80;
-                const wait = (ms) => new Promise(resolve => setTimeout(resolve, ms));
-
-                for (let i = 0; i < frames; i++) {
-                    await wait(frameDelay);
-                    const canvas = await html2canvas(receipt, { backgroundColor: '#181818', scale: 1.5 });
-                    gif.addFrame(canvas, { delay: frameDelay });
+                if (Object.keys(player1Offer).length === 0 && Object.keys(player2Offer).length === 0) {
+                    alert("Please load the test trade first!");
+                    return;
                 }
 
-                gif.on('finished', function(blob) {
-                    const filename = `wild-era-trade-${Math.random().toString(16).slice(2, 10)}.gif`;
-                    const url = URL.createObjectURL(blob);
-                    const link = document.createElement('a');
-                    link.download = filename;
-                    link.href = url;
-                    link.click();
+                try {
+                    button.disabled = true;
+                    testButton.disabled = true;
+                    button.textContent = 'PREPARING...';
+
+                    prepareReceipt();
+                    receipt.style.display = 'block';
+
+                    sakura = new Sakura(receipt, {
+                        colors: [{ gradientColorStart: 'rgba(255, 183, 197, 0.9)', gradientColorEnd: 'rgba(255, 197, 208, 0.9)', gradientColorDegree: 120, }],
+                        fallSpeed: 1.5,
+                        maxOkura: 15
+                    });
+                    sakura.start();
                     
-                    // Cleanup
-                    URL.revokeObjectURL(url);
+                    const gif = new GIF({
+                        workers: 2,
+                        quality: 10,
+                        workerScript: gifWorkerUrl
+                    });
+
+                    const frames = 30;
+                    const frameDelay = 100;
+                    const wait = ms => new Promise(resolve => setTimeout(resolve, ms));
+
+                    await wait(500); // Wait for animation to start
+
+                    for (let i = 0; i < frames; i++) {
+                        button.textContent = `CAPTURING ${Math.round((i / frames) * 100)}%`;
+                        const canvas = await html2canvas(receipt, { scale: 1.5, logging: false });
+                        gif.addFrame(canvas, { delay: frameDelay });
+                        await wait(10); // Small delay between captures
+                    }
+
+                    gif.on('progress', (p) => button.textContent = `RENDERING ${Math.round(p * 100)}%`);
+
+                    gif.on('finished', (blob) => {
+                        const filename = `trade-test-${Date.now()}.gif`;
+                        const url = URL.createObjectURL(blob);
+                        const link = document.createElement('a');
+                        link.download = filename;
+                        link.href = url;
+                        link.click();
+                        URL.revokeObjectURL(url);
+                    });
+
+                    gif.render();
+
+                } catch (error) {
+                    console.error("GIF generation failed:", error);
+                    alert("Sorry, something went wrong while creating the GIF.");
+                } finally {
+                    if (sakura) sakura.stop();
                     receipt.style.display = 'none';
-                    sakura.stop();
                     button.disabled = false;
+                    testButton.disabled = false;
                     button.textContent = 'SAVE AS GIF';
-                });
-
-                gif.render();
+                }
             });
-
-            // --- Initialization ---
-            const player1Select = createCustomSelect('player1-item-select-wrapper');
-            const player2Select = createCustomSelect('player2-item-select-wrapper');
-            setupSide('player1', player1Offer, player1Select);
-            setupSide('player2', player2Offer, player2Select);
         });
     </script>
 </body>
