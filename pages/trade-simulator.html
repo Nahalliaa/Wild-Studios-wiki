@@ -159,7 +159,26 @@
             const currentPage = "/Wild-Studios-wiki" + window.location.pathname.substring(window.location.pathname.lastIndexOf('/'));
             document.querySelectorAll('.sidebar .nav-link').forEach(link => { if (link.getAttribute('href') === currentPage) { link.classList.add('active'); } });
 
-            const tradeValues = { "PBC": 170000, "Movie Brachio": 111000, "Movie Mosa": 90000, "Suited Capy": 90000, "Movie Spino": 80000, "Indor Bone": 76000, "Movie Rex": 73000, "Carnage Cerato": 70000, "Movie Trike": 69000, "Indom Bone": 67000, "Carnage Rex": 53000 };
+            const tradeValues = {
+  "PBC": 170000,
+  "Movie Brachio": 111000,
+  "Movie Mosa": 90000,
+  "Suited Capy": 90000,
+  "Movie Spino": 80000,
+  "Indor Bone": 76000,
+  "Movie Rex": 73000,
+  "Carnage Cerato": 70000,
+  "Movie Trike": 69000,
+  "Indom Bone": 67000,
+  "Carnage Rex": 53000,
+  "Carnage Pachy": 50000,
+  "Carnage Spino": 45000,
+  "Alpha Indom": 33000,
+  "Albino Indor": 33000,
+  "CowBoy Dilo": 26000,
+  "Jurassic Utah": 20000,
+  "Salmononto": 17000
+};
             let player1Offer = {}; let player2Offer = {};
             
             function createCustomSelect(wrapperId) {
