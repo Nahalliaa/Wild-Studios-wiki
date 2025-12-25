@@ -1,0 +1,414 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Wild Era Wiki</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <!-- Kept Press Start 2P for headers, added Rajdhani for readable modern sci-fi body text -->
+    <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&family=Rajdhani:wght@400;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --orange: #ff7f00;
+            --purple: #9d00ff;
+            --dark-bg: #0a0a0a;
+            --panel-bg: rgba(20, 20, 20, 0.85);
+            --text-main: #e0e0e0;
+            
+            --glow-orange: 0 0 10px rgba(255, 127, 0, 0.5), 0 0 20px rgba(255, 127, 0, 0.2);
+            --glow-purple: 0 0 10px rgba(157, 0, 255, 0.5), 0 0 20px rgba(157, 0, 255, 0.2);
+            --border-gradient: linear-gradient(135deg, var(--orange), var(--purple));
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Rajdhani', sans-serif; /* Modern readable font */
+            background-color: var(--dark-bg);
+            color: var(--text-main);
+            overflow-x: hidden;
+            background-image: 
+                radial-gradient(circle at 50% 0%, #1a1a1a 0%, var(--dark-bg) 80%);
+            min-height: 100vh;
+        }
+        
+        /* Modernized CRT Scanlines - Subtler */
+        body::after {
+            content: "";
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            background: linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.25) 50%), linear-gradient(90deg, rgba(255, 0, 0, 0.06), rgba(0, 255, 0, 0.02), rgba(0, 0, 255, 0.06));
+            background-size: 100% 2px, 3px 100%;
+            pointer-events: none;
+            z-index: 1000;
+        }
+
+        /* Container Layout */
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+            position: relative;
+            z-index: 1;
+        }
+
+        /* Typography */
+        h1, h2, h3 {
+            font-family: 'Press Start 2P', cursive;
+            text-transform: uppercase;
+            line-height: 1.4;
+        }
+
+        h1 {
+            color: var(--orange);
+            text-shadow: 4px 4px 0px #000;
+            font-size: 2rem;
+            margin: 20px 0;
+            text-align: center;
+        }
+
+        h2 {
+            font-size: 1.2rem;
+            color: var(--white);
+            margin: 60px 0 30px;
+            position: relative;
+            display: inline-block;
+            left: 50%;
+            transform: translateX(-50%);
+        }
+        
+        /* Decorative lines around H2 */
+        h2::before, h2::after {
+            content: "";
+            display: inline-block;
+            width: 40px;
+            height: 4px;
+            background: var(--purple);
+            vertical-align: middle;
+            margin: 0 15px;
+            box-shadow: var(--glow-purple);
+        }
+
+        /* Header / Logo Area */
+        header {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            margin-bottom: 40px;
+            padding-top: 20px;
+        }
+
+        .logo-image {
+            width: 180px;
+            height: auto;
+            filter: drop-shadow(0 0 15px rgba(255, 127, 0, 0.4));
+            transition: transform 0.3s ease;
+        }
+        
+        .logo-image:hover {
+            transform: scale(1.05) rotate(-2deg);
+        }
+
+        /* Modern Navigation Bar */
+        .nav-container {
+            position: sticky;
+            top: 20px;
+            z-index: 100;
+            display: flex;
+            justify-content: center;
+            margin-bottom: 40px;
+        }
+
+        .tabs {
+            display: flex;
+            gap: 10px;
+            background: rgba(0, 0, 0, 0.8);
+            backdrop-filter: blur(10px);
+            padding: 10px;
+            border-radius: 50px;
+            border: 1px solid #333;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+
+        .tab {
+            font-family: 'Press Start 2P', cursive;
+            font-size: 0.65rem;
+            padding: 12px 20px;
+            text-decoration: none;
+            color: #fff;
+            border-radius: 30px;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .tab:hover {
+            background: var(--orange);
+            color: #000;
+            box-shadow: var(--glow-orange);
+        }
+
+        .tab::after {
+            content: '';
+            position: absolute;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: linear-gradient(45deg, transparent, rgba(255,255,255,0.2), transparent);
+            transform: translateX(-100%);
+            transition: 0.5s;
+        }
+        
+        .tab:hover::after {
+            transform: translateX(100%);
+        }
+
+        /* Glassmorphism Cards/Sections */
+        .section {
+            background: var(--panel-bg);
+            backdrop-filter: blur(5px);
+            border: 1px solid #333;
+            border-left: 4px solid var(--orange);
+            padding: 30px;
+            border-radius: 12px;
+            margin-bottom: 30px;
+            font-size: 1.2rem;
+            line-height: 1.6;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.4);
+            transition: transform 0.2s;
+        }
+
+        .section:hover {
+            border-left-color: var(--purple);
+            transform: translateY(-2px);
+        }
+
+        /* Links in text */
+        .section a {
+            color: var(--orange);
+            text-decoration: none;
+            font-weight: 700;
+            border-bottom: 2px solid transparent;
+            transition: all 0.2s;
+        }
+
+        .section a:hover {
+            color: var(--purple);
+            border-bottom: 2px solid var(--purple);
+            text-shadow: var(--glow-purple);
+        }
+
+        /* Resource Grid (Cards) */
+        .key-resources {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+            gap: 20px;
+        }
+
+        .resource-card {
+            background: linear-gradient(160deg, rgba(30,30,30,0.9) 0%, rgba(10,10,10,0.95) 100%);
+            border: 1px solid #333;
+            border-radius: 15px;
+            padding: 20px;
+            text-align: center;
+            transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .resource-card:hover {
+            transform: translateY(-10px);
+            border-color: var(--orange);
+            box-shadow: var(--glow-orange);
+        }
+
+        .resource-card img {
+            width: 100px;
+            height: 100px;
+            object-fit: cover;
+            border-radius: 12px;
+            margin-bottom: 15px;
+            border: 2px solid #444;
+            transition: border-color 0.3s;
+        }
+
+        .resource-card:hover img {
+            border-color: var(--orange);
+        }
+
+        .resource-card a {
+            display: block;
+            text-decoration: none;
+            color: #fff;
+            font-family: 'Press Start 2P', cursive;
+            font-size: 0.7rem;
+            margin-top: 10px;
+            letter-spacing: 1px;
+        }
+
+        /* Game Access Banner */
+        .game-access-container {
+            display: flex;
+            justify-content: center;
+            margin-top: 20px;
+        }
+
+        .game-access-btn {
+            position: relative;
+            display: inline-block;
+            border-radius: 15px;
+            overflow: hidden;
+            border: 2px solid var(--purple);
+            box-shadow: 0 0 15px rgba(157, 0, 255, 0.2);
+            transition: all 0.3s;
+        }
+
+        .game-access-btn img {
+            display: block;
+            max-width: 300px;
+            width: 100%;
+            transition: transform 0.5s;
+        }
+
+        .game-access-btn:hover {
+            box-shadow: var(--glow-purple);
+            transform: scale(1.02);
+        }
+        
+        .game-access-btn:hover img {
+            transform: scale(1.1);
+        }
+
+        /* List Styling */
+        .link-list {
+            list-style: none;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+        }
+
+        .link-list li a {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 15px;
+            background: rgba(255,255,255,0.05);
+            border: 1px solid #333;
+            color: #fff;
+            text-decoration: none;
+            border-radius: 8px;
+            font-family: 'Press Start 2P', cursive;
+            font-size: 0.7rem;
+            transition: all 0.3s;
+        }
+
+        .link-list li a:hover {
+            background: var(--purple);
+            border-color: var(--purple);
+            box-shadow: var(--glow-purple);
+        }
+
+        /* Footer */
+        footer {
+            text-align: center;
+            padding: 60px 20px;
+            color: #666;
+            font-size: 0.9rem;
+            font-family: 'Press Start 2P', cursive;
+            font-size: 0.6rem;
+        }
+
+        @media (max-width: 768px) {
+            h1 { font-size: 1.5rem; }
+            h2 { font-size: 0.9rem; width: 100%; text-align: center; }
+            h2::before, h2::after { width: 20px; }
+            .tabs { border-radius: 0; width: 100%; border-left: none; border-right: none; }
+            .nav-container { top: 0; }
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    
+    <header>
+        <div class="logo-container">
+            <!-- Ensure images exist in your folder -->
+            <img src="images/WSL.png" alt="Wild Studios Logo" class="logo-image">
+        </div>
+        <h1>Wild Era Wiki</h1>
+    </header>
+
+    <div class="nav-container">
+        <nav class="tabs">
+            <a href="index.html" class="tab">Home</a>
+            <a href="value-list.html" class="tab">Values</a>
+            <a href="mechanics.html" class="tab">Mechanics</a>
+            <a href="skins.html" class="tab">Skins</a>
+            <a href="creatures.html" class="tab">Creatures</a>
+        </nav>
+    </div>
+
+    <div class="section">
+        <p><strong>Welcome, survivor.</strong> This is the ultimate database for Wild Era. Access market values, creature stats, and trading mechanics using the neural interface above.</p>
+    </div>
+
+    <h2>System Modules</h2>
+    <div class="key-resources">
+        <div class="resource-card">
+            <a href="creatures.html">
+                <img src="images/CeratoIcon.png" alt="Creatures">
+                <br>Creatures
+            </a>
+        </div>
+        <div class="resource-card">
+            <a href="mechanics.html">
+                <img src="images/AmberLogo.webp" alt="Game Mechanics">
+                <br>Mechanics
+            </a>
+        </div>
+        <div class="resource-card">
+            <a href="value-list.html">
+                <img src="images/LabLogo.webp" alt="Trading">
+                <br>Trading Data
+            </a>
+        </div>
+        <div class="resource-card">
+            <a href="skins.html">
+                <img src="images/CarnageCerato01.png" alt="Skins">
+                <br>Skins Database
+            </a>
+        </div>
+    </div>
+
+    <h2>Initialize Simulation</h2>
+    <div class="game-access-container">
+        <a href="https://www.roblox.com/games/119283489130383/Wild-Era-Quetz-Deino" target="_blank" class="game-access-btn">
+            <img src="images/WELOGO1.webp" alt="Wild Era Game Logo">
+        </a>
+    </div>
+
+    <h2>Comms Channels</h2>
+    <div class="section">
+        <ul class="link-list">
+            <li><a href="https://discord.gg/5hKfJRFGf4" target="_blank">Discord Uplink</a></li>
+            <li><a href="https://www.roblox.com/groups/12020792/Wild-Studios#!/about" target="_blank">Roblox Group</a></li>
+            <li><a href="#">Patch Log</a></li>
+        </ul>
+    </div>
+
+    <footer>
+        <p>EST. 2025 // WILD ERA WIKI // TERMINAL ONLINE</p>
+    </footer>
+</div>
+
+</body>
+</html>
